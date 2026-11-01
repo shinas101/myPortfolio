@@ -161,7 +161,7 @@ const FEATURED_PROJECTS: FrontProject[] = [
             "Tactile 3D card-stack news reader with 100% local NLP summarization (PyTorch T5-small & Luhn algorithm), SQLite WAL SWR caching, and universal embed support.",
         image: "/projects/news-flashcard/news-flashcard-cover.webp",
         year: "2025",
-        live: "https://news-flashcard-9ad00f891023.herokuapp.com",
+        live: "https://newsflashcard.shinas.dev",
         github: "https://github.com/shinas101/NewsFlashcard",
         tools: ["FastAPI", "PyTorch", "HuggingFace T5", "Next.js 15", "SQLite WAL", "Selectolax"],
     },
