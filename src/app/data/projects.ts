@@ -138,7 +138,7 @@ export const projects: Project[] = [
             "Selectolax",
         ],
         year: "2025",
-        link: "https://news-flashcard-9ad00f891023.herokuapp.com",
+        link: "https://newsflashcard.shinas.dev/",
         thumb: "/projects/news-flashcard/news-flashcard-cover.webp",
         page: {
             tagline: "Tactile 3D card-stack news reader powered by zero-API-cost local NLP summarization.",
@@ -159,7 +159,7 @@ export const projects: Project[] = [
                 },
                 {
                     kind: "embed",
-                    src: "https://news-flashcard-9ad00f891023.herokuapp.com/embed?lang=en&theme=dark",
+                    src: "https://newsflashcard.shinas.dev/embed?lang=en&theme=dark",
                     title: "News FlipCard Widget",
                     height: 540,
                 },
