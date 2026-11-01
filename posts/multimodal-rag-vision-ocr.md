@@ -24,7 +24,7 @@ Traditional Python PDF libraries (like basic text dumpers) discard geometric lay
 | Latency     | 140ms    | 45ms     |
 ```
 
-Raw string extraction often reads horizontally across columns, yielding scrambled sentences like *"Metric Baseline Proposed Accuracy 88.4% 94.2%"*. When fed into an embedding model, the semantic relationship between rows and columns is lost.
+Raw string extraction often reads horizontally across columns, yielding scrambled sentences like _"Metric Baseline Proposed Accuracy 88.4% 94.2%"_. When fed into an embedding model, the semantic relationship between rows and columns is lost.
 
 ---
 

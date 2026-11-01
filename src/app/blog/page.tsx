@@ -18,7 +18,8 @@ export default async function BlogPage() {
                     Writing
                 </h1>
                 <p className="font-geistSans text-[15px] sm:text-[16px] text-[var(--muted-color)] leading-relaxed max-w-[36rem]">
-                    Notes, system architectures, and deep-dives on real-time systems, AI/ML models, and Python automation.
+                    Notes, system architectures, and deep-dives on real-time systems, AI/ML models, and Python
+                    automation.
                 </p>
             </header>
 
@@ -26,7 +27,15 @@ export default async function BlogPage() {
                 <div className="mt-12 sm:mt-16 py-10 sm:py-12 border border-dashed border-[color-mix(in_srgb,var(--foreground-color)_15%,transparent)] text-center font-geistMono">
                     <p className="text-[14px] opacity-70">No posts found.</p>
                     <p className="text-[12px] opacity-40 mt-1">
-                        Add a <code className="bg-[color-mix(in_srgb,var(--foreground-color)_8%,transparent)] px-1.5 py-0.5">.md</code> file in the <code className="bg-[color-mix(in_srgb,var(--foreground-color)_8%,transparent)] px-1.5 py-0.5">posts/</code> directory to publish.
+                        Add a{" "}
+                        <code className="bg-[color-mix(in_srgb,var(--foreground-color)_8%,transparent)] px-1.5 py-0.5">
+                            .md
+                        </code>{" "}
+                        file in the{" "}
+                        <code className="bg-[color-mix(in_srgb,var(--foreground-color)_8%,transparent)] px-1.5 py-0.5">
+                            posts/
+                        </code>{" "}
+                        directory to publish.
                     </p>
                 </div>
             ) : (

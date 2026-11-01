@@ -133,7 +133,7 @@ const LETTUCE_PRESETS: LettucePreset[] = [
 
     // Colony 2: Lower-Right corner cluster
     { relX: 0.85, relY: 0.78, baseRadius: 50, petals: 11 },
-    { relX: 0.90, relY: 0.85, baseRadius: 35, petals: 9 },
+    { relX: 0.9, relY: 0.85, baseRadius: 35, petals: 9 },
     { relX: 0.79, relY: 0.83, baseRadius: 34, petals: 8 },
 
     // Colony 3: Upper-Left quiet cove
@@ -453,8 +453,24 @@ export class World {
                     const flank = 24;
 
                     // Counter-rotating side eddy curls
-                    this.addSwirl(pointer.x + nx * flank, pointer.y + ny * flank, pdx * 0.3, pdy * 0.3, 1, 48, 0.3 + speedNorm * 0.3);
-                    this.addSwirl(pointer.x - nx * flank, pointer.y - ny * flank, pdx * 0.3, pdy * 0.3, -1, 48, 0.3 + speedNorm * 0.3);
+                    this.addSwirl(
+                        pointer.x + nx * flank,
+                        pointer.y + ny * flank,
+                        pdx * 0.3,
+                        pdy * 0.3,
+                        1,
+                        48,
+                        0.3 + speedNorm * 0.3
+                    );
+                    this.addSwirl(
+                        pointer.x - nx * flank,
+                        pointer.y - ny * flank,
+                        pdx * 0.3,
+                        pdy * 0.3,
+                        -1,
+                        48,
+                        0.3 + speedNorm * 0.3
+                    );
                     this.prevPointer.x = pointer.x;
                     this.prevPointer.y = pointer.y;
                 }
@@ -510,8 +526,11 @@ export class World {
                     // Fish body thickness profile along the spine
                     const s = n / (KOI_NODES - 1);
                     const bodyW =
-                        (s < 0.12 ? 0.11 * Math.sqrt(s / 0.12) : s < 0.3 ? 0.11 + 0.025 * ((s - 0.12) / 0.18) : 0.033 + 0.102 * (1 - (s - 0.3) / 0.44)) *
-                        k.length;
+                        (s < 0.12
+                            ? 0.11 * Math.sqrt(s / 0.12)
+                            : s < 0.3
+                              ? 0.11 + 0.025 * ((s - 0.12) / 0.18)
+                              : 0.033 + 0.102 * (1 - (s - 0.3) / 0.44)) * k.length;
                     const interactR = letu.radius + bodyW + 18;
 
                     if (dist < interactR) {
@@ -755,11 +774,7 @@ export class World {
 
         const desired = Math.atan2(dy, dx);
         // Clean, smooth turning: no rapid spinning or artificial swirling!
-        const agility = fleeing
-            ? 3.2
-            : activeBurst
-              ? 1.6
-              : 0.9;
+        const agility = fleeing ? 3.2 : activeBurst ? 1.6 : 0.9;
         const maxTurn = agility * dt;
         const turned = clamp(angleDiff(k.heading, desired), -maxTurn, maxTurn);
         k.heading += turned;
@@ -774,13 +789,7 @@ export class World {
             k.nextWake = time + rand(0.9, 1.8) / Math.max(0.4, k.beat);
         }
 
-        const target =
-            cruise *
-            (fleeing
-                ? 3.4
-                : activeBurst
-                  ? 1.3
-                  : 0.75);
+        const target = cruise * (fleeing ? 3.4 : activeBurst ? 1.3 : 0.75);
         k.speed += (target - k.speed) * Math.min(1, dt * (fleeing ? 3.0 : activeBurst ? 1.5 : 1.0));
         k.phase += dt * (0.5 + k.beat * (1.5 + k.speed / 16));
         k.finPhase += dt * 1.8;
@@ -800,7 +809,7 @@ export class World {
         nodes[1] = clamp(nodes[1], 12, H - 12);
 
         const seg = L / (KOI_NODES - 1);
-        const maxBend = 0.20;
+        const maxBend = 0.2;
         let prevAngle = k.heading + Math.PI;
         for (let n = 1; n < KOI_NODES; n++) {
             const px = nodes[(n - 1) * 2];

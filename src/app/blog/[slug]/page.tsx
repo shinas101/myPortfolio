@@ -88,10 +88,7 @@ export default async function BlogPostPage({ params }: Props) {
                 </header>
 
                 {/* Rendered Markdown Content */}
-                <div
-                    className="blog-prose"
-                    dangerouslySetInnerHTML={{ __html: post.html }}
-                />
+                <div className="blog-prose" dangerouslySetInnerHTML={{ __html: post.html }} />
 
                 {/* Article Footer */}
                 <footer className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-[color-mix(in_srgb,var(--foreground-color)_10%,transparent)]">

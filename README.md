@@ -49,16 +49,19 @@ The app will be available locally at `http://localhost:3000`.
 This project is optimized for direct static export deployment to **Cloudflare Pages**.
 
 ### 1. Connect Repository
+
 1. In the [Cloudflare Dashboard](https://dash.cloudflare.com/), navigate to **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
 2. Select repository: `shinas101/myPortfolio`.
 
 ### 2. Configure Build Settings
+
 - **Framework Preset**: `Next.js (Static HTML Export)` or `None`
 - **Build Command**: `npm run build`
 - **Build Output Directory**: `out`
 - **Node.js Version**: Handled automatically via `.nvmrc` (Node 20). Alternatively, set Environment Variable `NODE_VERSION = 20`.
 
 ### 3. Edge Routing & Headers
+
 - **`public/_redirects`**: Automatically copied to `out/_redirects` for canonical paths and PostHog ingestion proxies.
 - **`public/_headers`**: Automatically copied to `out/_headers` to enforce cache immutability on `/_next/static/*` and security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`).
 

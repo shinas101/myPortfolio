@@ -38,3 +38,6 @@ next-env.d.ts
 
 # agents & local tooling
 /.agent/
+
+# agents & local tooling
+/.agent/

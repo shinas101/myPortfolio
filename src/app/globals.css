@@ -188,7 +188,9 @@
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
     text-decoration-color: color-mix(in srgb, var(--foreground-color) 35%, transparent);
-    transition: text-decoration-color 150ms ease, opacity 150ms ease;
+    transition:
+        text-decoration-color 150ms ease,
+        opacity 150ms ease;
 }
 
 .blog-prose a:hover {
@@ -281,7 +283,6 @@
     background: color-mix(in srgb, var(--foreground-color) 6%, transparent);
     font-weight: 600;
 }
-
 
 .blog-prose iframe {
     max-width: 100%;

@@ -928,7 +928,7 @@ export class KoiRenderer {
                 if (slope > 0.16 || absVal > 0.28) {
                     glyph = lineGlyph(-gy, gx);
                 } else if (slope > 0.08 || absVal > 0.12) {
-                    glyph = slope > 0.10 ? lineGlyph(-gy, gx) : "~";
+                    glyph = slope > 0.1 ? lineGlyph(-gy, gx) : "~";
                 } else if (slope > 0.045 || absVal > 0.05) {
                     glyph = "~";
                 }
@@ -978,5 +978,4 @@ export class KoiRenderer {
             }
         }
     }
-
 }

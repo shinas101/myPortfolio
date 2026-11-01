@@ -45,28 +45,32 @@ const SKILLS: SkillItem[] = [
         id: "automation",
         title: "Web Scraping & Data Pipelines",
         icon: "bug",
-        summary: "Multi-source web extractors across 15+ streaming sources, rotating proxy evasion, and token resolution.",
+        summary:
+            "Multi-source web extractors across 15+ streaming sources, rotating proxy evasion, and token resolution.",
         tags: ["Playwright", "BeautifulSoup", "RapidFuzz", "Proxy Pools", "Anti-Bot Evasion", "ETL"],
     },
     {
         id: "fullstack",
         title: "Full-Stack & Web Architecture",
         icon: "browser",
-        summary: "Performant responsive web applications, Neo-Brutalist styles, interactive state, and fluid micro-interactions.",
+        summary:
+            "Performant responsive web applications, Neo-Brutalist styles, interactive state, and fluid micro-interactions.",
         tags: ["Next.js", "React", "TypeScript", "TailwindCSS", "Motion", "Streamlit"],
     },
     {
         id: "hardware-iot",
         title: "Hardware, IoT & Embedded Systems",
         icon: "cog",
-        summary: "Real-time indoor activity monitoring, UWB radar telemetry, sensor integration, and fall detection ML.",
+        summary:
+            "Real-time indoor activity monitoring, UWB radar telemetry, sensor integration, and fall detection ML.",
         tags: ["ESP32", "ESP8266", "UWB Radar", "Arduino IDE", "Activity Classification", "Sensors"],
     },
     {
         id: "rag-agents",
         title: "RAG & Autonomous AI Agents",
         icon: "star",
-        summary: "Document chunking pipelines, semantic vector search, Claude/Gemini integration, and grounded synthesis.",
+        summary:
+            "Document chunking pipelines, semantic vector search, Claude/Gemini integration, and grounded synthesis.",
         tags: ["RAG Chatbot", "FAISS", "Vector DBs", "Prompt Engineering", "Claude", "AI Agents"],
     },
     {
@@ -236,8 +240,7 @@ const FrontPage = () => {
                                     animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.1, 1] }}
                                     transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                                     className="text-amber-500/80 inline-flex"
-                                >
-                                </motion.span>
+                                ></motion.span>
                                 <h1 className="text-[17px] sm:text-[19px] font-semibold text-foreground tracking-tight">
                                     Hi, I&apos;m Shinas Samoon.
                                 </h1>
@@ -253,13 +256,17 @@ const FrontPage = () => {
 
                         <div className="flex flex-col gap-2.5 sm:gap-3 text-foreground/90">
                             <p>
-                                Software Engineer with hands-on experience in Python development, automation, and AI/ML applications.
+                                Software Engineer with hands-on experience in Python development, automation, and AI/ML
+                                applications.
                             </p>
                             <p>
                                 Previously, AI/ML Intern @ <Cited source="ictk">ICT Academy of Kerala</Cited>.
                             </p>
                             <p>
-                                B.Tech in ECE graduate from <Cited source="lbs">L.B.S College of Engineering</Cited>. Building <Cited source="clinical">Clinical Voice AI</Cited>, <Cited source="flashnews">News FlipCard</Cited>, and <Cited source="pdfchatbot">PDFChatbot</Cited>.
+                                B.Tech in ECE graduate from <Cited source="lbs">L.B.S College of Engineering</Cited>.
+                                Building <Cited source="clinical">Clinical Voice AI</Cited>,{" "}
+                                <Cited source="flashnews">News FlipCard</Cited>, and{" "}
+                                <Cited source="pdfchatbot">PDFChatbot</Cited>.
                             </p>
                         </div>
 
@@ -341,7 +348,11 @@ const FrontPage = () => {
                                                         href={liveHref}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        title={hasCustomLive ? "Live Application" : "GitHub Repository (Live link)"}
+                                                        title={
+                                                            hasCustomLive
+                                                                ? "Live Application"
+                                                                : "GitHub Repository (Live link)"
+                                                        }
                                                         className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono border border-[color-mix(in_srgb,var(--foreground-color)_14%,transparent)] bg-[color-mix(in_srgb,var(--foreground-color)_5%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] hover:border-foreground/40 text-foreground transition-all rounded outline-none"
                                                     >
                                                         <span className="relative flex h-1.5 w-1.5">

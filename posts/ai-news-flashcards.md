@@ -34,7 +34,8 @@ Many modern AI products simply wrap proprietary cloud LLM APIs (OpenAI, Claude, 
 News FlipCard runs **100% local inference** directly on the server dyno without external API dependencies:
 
 ### English Pipeline: Singleton PyTorch with T5-small
-For English national news, we initialize a thread-safe singleton pipeline using Hugging Face's [`google-t5/t5-small`](https://huggingface.co/google-t5/t5-small). The model generates abstractive summaries constrained strictly to 50–60 words while automated regex filters strip agency boilerplate (*PTI, ANI, Reuters*):
+
+For English national news, we initialize a thread-safe singleton pipeline using Hugging Face's [`google-t5/t5-small`](https://huggingface.co/google-t5/t5-small). The model generates abstractive summaries constrained strictly to 50–60 words while automated regex filters strip agency boilerplate (_PTI, ANI, Reuters_):
 
 ```python
 import torch
@@ -60,6 +61,7 @@ class T5Summarizer:
 ```
 
 ### Malayalam Pipeline: Morphological Luhn Frequency Scoring
+
 Because generative neural models for Malayalam can introduce hallucinations or require massive VRAM overhead, our Malayalam pipeline uses a high-performance **extractive summarizer** based on a tuned Luhn frequency-scoring algorithm. By evaluating sentence significance against Unicode Malayalam stop-word lists and keyword density, it extracts the most salient factual statements in under **5 milliseconds**.
 
 ---
@@ -68,7 +70,7 @@ Because generative neural models for Malayalam can introduce hallucinations or r
 
 News sources use disparate markup structures and JavaScript-rendered redirects. Our ingestion engine runs asynchronously using **FastAPI** and **Python**:
 
-- **Multi-Source Crawling**: Ingests feeds across 10+ outlets, including *The Hindu, Times of India, NDTV, Indian Express, Manorama, Mathrubhumi, Asianet, News18*, and *Madhyamam*.
+- **Multi-Source Crawling**: Ingests feeds across 10+ outlets, including _The Hindu, Times of India, NDTV, Indian Express, Manorama, Mathrubhumi, Asianet, News18_, and _Madhyamam_.
 - **Google News Batchexecute Decoder**: Resolves obfuscated Google News redirect tokens into clean canonical publisher URLs without spawning full browser instances.
 - **Selectolax & BeautifulSoup4 Fallbacks**: High-throughput DOM parsing utilizes `selectolax` (C-based Modest engine) for 10x faster node extraction, gracefully falling back to `BeautifulSoup4` for malformed HTML.
 

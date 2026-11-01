@@ -40,9 +40,7 @@ export function PostHogInitializer({ children }: { children: React.ReactNode }) 
             typeof window !== "undefined" &&
             (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-        const apiHost =
-            process.env.NEXT_PUBLIC_POSTHOG_HOST ||
-            (isLocal ? "https://us.i.posthog.com" : "/ingest");
+        const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || (isLocal ? "https://us.i.posthog.com" : "/ingest");
 
         posthog.init(posthogKey, {
             api_host: apiHost,

@@ -82,8 +82,7 @@ class Logger {
 
     error(message: string, error?: unknown): void {
         if (this.enabled) {
-            const errDetails =
-                error instanceof Error ? { message: error.message, stack: error.stack } : error;
+            const errDetails = error instanceof Error ? { message: error.message, stack: error.stack } : error;
             console.error(this.format("error", message, errDetails));
         }
     }
@@ -133,10 +132,7 @@ export class BlogUtils {
      */
     static isValidSlug(slug: unknown): slug is string {
         return (
-            typeof slug === "string" &&
-            slug.length > 0 &&
-            slug.length <= 128 &&
-            BLOG_CONFIG.safeSlugPattern.test(slug)
+            typeof slug === "string" && slug.length > 0 && slug.length <= 128 && BLOG_CONFIG.safeSlugPattern.test(slug)
         );
     }
 
@@ -381,9 +377,10 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
         const post: BlogPost = {
             slug,
-            title: typeof data.title === "string" && data.title.trim().length > 0
-                ? data.title
-                : BlogUtils.formatFallbackTitle(slug),
+            title:
+                typeof data.title === "string" && data.title.trim().length > 0
+                    ? data.title
+                    : BlogUtils.formatFallbackTitle(slug),
             date: BlogUtils.formatDate(data.date) || (data.date ? String(data.date) : ""),
             description: typeof data.description === "string" ? data.description : "",
             tags: BlogUtils.normalizeTags(data.tags),
@@ -394,14 +391,18 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
         BlogCache.setFullPost(slug, post, mtimeMs);
         // Also seed metadata cache to accelerate subsequent list queries
-        BlogCache.setPostMeta(slug, {
-            slug: post.slug,
-            title: post.title,
-            date: post.date,
-            description: post.description,
-            tags: post.tags,
-            readTime: post.readTime,
-        }, mtimeMs);
+        BlogCache.setPostMeta(
+            slug,
+            {
+                slug: post.slug,
+                title: post.title,
+                date: post.date,
+                description: post.description,
+                tags: post.tags,
+                readTime: post.readTime,
+            },
+            mtimeMs
+        );
 
         logger.debug(`Compiled and cached post: ${slug}`);
         return post;
@@ -453,9 +454,10 @@ export async function getAllPosts(): Promise<BlogPostMeta[]> {
             const readTime = BlogUtils.calculateReadTime(content);
             const meta: BlogPostMeta = {
                 slug,
-                title: typeof data.title === "string" && data.title.trim().length > 0
-                    ? data.title
-                    : BlogUtils.formatFallbackTitle(slug),
+                title:
+                    typeof data.title === "string" && data.title.trim().length > 0
+                        ? data.title
+                        : BlogUtils.formatFallbackTitle(slug),
                 date: BlogUtils.formatDate(data.date) || (data.date ? String(data.date) : ""),
                 description: typeof data.description === "string" ? data.description : "",
                 tags: BlogUtils.normalizeTags(data.tags),

@@ -137,7 +137,12 @@ const Cited = ({ source, children }: { source: string; children: React.ReactNode
                     <motion.span
                         initial={{ opacity: 0, y: flipDown ? -4 : 4, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: flipDown ? -2 : 2, scale: 0.99, transition: { duration: 0.08, ease: "easeIn" } }}
+                        exit={{
+                            opacity: 0,
+                            y: flipDown ? -2 : 2,
+                            scale: 0.99,
+                            transition: { duration: 0.08, ease: "easeIn" },
+                        }}
                         transition={{ duration: 0.12, ease: "easeOut" }}
                         onClick={members ? undefined : activate}
                         data-koi-ignore

@@ -45,7 +45,8 @@ export const SOURCES: Record<string, Source> = {
         name: "Clinical Voice AI (Mia)",
         role: "Real-time Medical Voice & Receptionist Platform",
         dates: "2025",
-        summary: "LiveKit WebRTC, Silero VAD barge-in, GPT-4o triage, and asyncpg PostgreSQL with pgvector semantic memory and SQLite failover.",
+        summary:
+            "LiveKit WebRTC, Silero VAD barge-in, GPT-4o triage, and asyncpg PostgreSQL with pgvector semantic memory and SQLite failover.",
         href: "/projects/clinical-voice-ai",
     },
     flashnews: {
@@ -53,7 +54,8 @@ export const SOURCES: Record<string, Source> = {
         name: "News FlipCard",
         role: "Tactile 3D Card-Stack News Reader",
         dates: "2025",
-        summary: "100% local PyTorch T5-small & Luhn NLP summarization, SQLite WAL SWR caching, and unified FastAPI + Next.js 15 single-dyno architecture.",
+        summary:
+            "100% local PyTorch T5-small & Luhn NLP summarization, SQLite WAL SWR caching, and unified FastAPI + Next.js 15 single-dyno architecture.",
         href: "/projects/news-flashcard",
     },
     pdfchatbot: {
@@ -61,7 +63,8 @@ export const SOURCES: Record<string, Source> = {
         name: "PDFChatbot",
         role: "Multimodal RAG & Vision OCR Engine",
         dates: "2025",
-        summary: "Multimodal RAG with 2-tier OCR (Tesseract + Gemini 2.5 Vision), PyMuPDF figure extraction, and FAISS vector search.",
+        summary:
+            "Multimodal RAG with 2-tier OCR (Tesseract + Gemini 2.5 Vision), PyMuPDF figure extraction, and FAISS vector search.",
         href: "/projects/pdf-chatbot",
     },
     uwb: {
@@ -69,7 +72,8 @@ export const SOURCES: Record<string, Source> = {
         name: "Elderly Care Activity Monitoring",
         role: "Indoor UWB Activity & Fall Detection",
         dates: "2024",
-        summary: "Real-time tracking system using UWB transceivers, ESP32, Python ML models, and Telegram emergency alerts.",
+        summary:
+            "Real-time tracking system using UWB transceivers, ESP32, Python ML models, and Telegram emergency alerts.",
         href: "/projects/uwb-elderly-care",
     },
 };

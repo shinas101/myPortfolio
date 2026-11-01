@@ -9,7 +9,11 @@ export function pushWithTransition(
     href: string,
     direction: "forward" | "back" = "forward"
 ) {
-    if (!document.startViewTransition || document.hidden || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+        !document.startViewTransition ||
+        document.hidden ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
         router.push(href);
         return;
     }
