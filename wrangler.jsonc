@@ -3,6 +3,6 @@
     "name": "myportfolio",
     "compatibility_date": "2026-11-01",
     "assets": {
-        "directory": "./out",
-    },
+        "directory": "./out"
+    }
 }

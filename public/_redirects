@@ -1,7 +1,3 @@
-# PostHog proxy rewrites for Cloudflare Pages (status 200 = reverse proxy rewrite)
-/ingest/static/* https://us-assets.i.posthog.com/static/:splat 200
-/ingest/* https://us.i.posthog.com/:splat 200
-
 # Canonical redirects
 /shinas-samoon-resume.pdf /resume.pdf 301
 /projects/malayalam-flash-news /projects/news-flashcard 301

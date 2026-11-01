@@ -34,13 +34,7 @@ export function PostHogInitializer({ children }: { children: React.ReactNode }) 
             return;
         }
 
-        // On localhost, send directly to PostHog US Cloud because the local Next.js dev server does not proxy /ingest
-        // In production on Cloudflare Pages, use /ingest to seamlessly bypass ad blockers via _redirects
-        const isLocal =
-            typeof window !== "undefined" &&
-            (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
-
-        const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || (isLocal ? "https://us.i.posthog.com" : "/ingest");
+        const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
         posthog.init(posthogKey, {
             api_host: apiHost,
