@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    /*
+     * When a citation is hovered or focused, the rest of the prose steps back so
+     * the mention is the only lit thing on the line. That contrast is what makes
+     * the pattern read; without it a bright pill just looks highlighted.
+     *
+     * Dims `color`, not `opacity` — a child cannot exceed its parent's opacity,
+     * so an opacity-dimmed container could never let the mention stay bright.
+     */
+    .cited-prose {
+        transition: color 180ms ease;
+    }
+    .cited-prose:has(button:hover),
+    .cited-prose:has(button:focus-visible),
+    /* Holds the dim while the cursor sits on an open card. */
+    .cited-prose:has([data-cited-open="true"]) {
+        color: color-mix(in srgb, var(--foreground-color) 32%, transparent);
+    }
+
+    /* Inline prose link: a faint underline that firms up on hover or focus. */
+    .ink-link {
+        color: var(--foreground-color);
+        text-decoration-line: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+        text-decoration-color: color-mix(in srgb, var(--foreground-color) 28%, transparent);
+        transition: text-decoration-color 150ms ease;
+        outline: none;
+    }
+    .ink-link:hover,
+    .ink-link:focus-visible {
+        text-decoration-color: currentColor;
+    }
+    .ink-link:focus-visible {
+        outline: 1px solid color-mix(in srgb, var(--foreground-color) 28%, transparent);
+        outline-offset: 3px;
+        border-radius: 2px;
+    }
+    /* Minimal thin scrollbar for scrollable cards */
+    .thin-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in srgb, var(--foreground-color) 18%, transparent) transparent;
+    }
+    .thin-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .thin-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .thin-scrollbar::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, var(--foreground-color) 18%, transparent);
+        border-radius: 2px;
+    }
+    .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in srgb, var(--foreground-color) 35%, transparent);
+    }
+
+    /* Continuous slow smooth marquee scrolling from right to left */
+    @keyframes marquee-scroll {
+        from {
+            transform: translate3d(0, 0, 0);
+        }
+        to {
+            transform: translate3d(-50%, 0, 0);
+        }
+    }
+
+    .animate-marquee-slow {
+        animation: marquee-scroll 45s linear infinite;
+        will-change: transform;
+    }
+
+    .animate-marquee-slow:hover {
+        animation-play-state: paused;
+    }
+
+    .animate-marquee-slow-alt {
+        animation: marquee-scroll 54s linear infinite;
+        will-change: transform;
+    }
+
+    .animate-marquee-slow-alt:hover {
+        animation-play-state: paused;
+    }
+}
+
+/* Every view transition sets data-transition on <html> to say which kind it is. */
+:root[data-transition]::view-transition-old(root),
+:root[data-transition]::view-transition-new(root) {
+    mix-blend-mode: normal;
+    animation-fill-mode: both;
+}
+
+/* Opening a project from the strip carries on its sideways motion: the strip drifts left while the project page slides
+   in over it from the right. Neither half fades, so the canvas behind never shows through. */
+:root[data-transition="forward"]::view-transition-old(root),
+:root[data-transition="forward"]::view-transition-new(root),
+:root[data-transition="back"]::view-transition-old(root),
+:root[data-transition="back"]::view-transition-new(root) {
+    animation-duration: 0.65s;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+:root[data-transition="forward"]::view-transition-old(root) {
+    animation-name: vt-drift-left;
+}
+:root[data-transition="forward"]::view-transition-new(root) {
+    animation-name: vt-slide-in;
+    box-shadow: -24px 0 48px rgb(0 0 0 / 0.3);
+}
+/* Going back plays it in reverse: the project page slides off to the right, on top, uncovering the strip. */
+:root[data-transition="back"]::view-transition-old(root) {
+    z-index: 1;
+    animation-name: vt-slide-out;
+    box-shadow: -24px 0 48px rgb(0 0 0 / 0.3);
+}
+:root[data-transition="back"]::view-transition-new(root) {
+    animation-name: vt-drift-in;
+    box-shadow: none;
+}
+@keyframes vt-drift-left {
+    to {
+        transform: translateX(-30%);
+    }
+}
+@keyframes vt-slide-in {
+    from {
+        transform: translateX(100%);
+    }
+}
+@keyframes vt-slide-out {
+    to {
+        transform: translateX(100%);
+    }
+}
+@keyframes vt-drift-in {
+    from {
+        transform: translateX(-30%);
+    }
+}
+
+/* Blog article prose styling matching the site theme */
+.blog-prose {
+    color: var(--foreground-color);
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.blog-prose h1,
+.blog-prose h2,
+.blog-prose h3,
+.blog-prose h4 {
+    color: var(--foreground-color);
+    font-family: var(--font-playfair-display), serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 2.25em;
+    margin-bottom: 0.6em;
+}
+
+.blog-prose h1 {
+    font-size: 1.85rem;
+    line-height: 1.25;
+}
+
+.blog-prose h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+}
+
+.blog-prose h3 {
+    font-size: 1.25rem;
+    line-height: 1.35;
+}
+
+.blog-prose p {
+    margin-bottom: 1.4em;
+    color: color-mix(in srgb, var(--foreground-color) 88%, transparent);
+}
+
+.blog-prose a {
+    color: var(--foreground-color);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: color-mix(in srgb, var(--foreground-color) 35%, transparent);
+    transition: text-decoration-color 150ms ease, opacity 150ms ease;
+}
+
+.blog-prose a:hover {
+    text-decoration-color: currentColor;
+}
+
+.blog-prose strong {
+    color: var(--foreground-color);
+    font-weight: 600;
+}
+
+.blog-prose blockquote {
+    border-left: 2px solid color-mix(in srgb, var(--foreground-color) 30%, transparent);
+    padding-left: 1.25rem;
+    margin: 1.8em 0;
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.925rem;
+    color: color-mix(in srgb, var(--foreground-color) 75%, transparent);
+    font-style: italic;
+}
+
+.blog-prose ul {
+    list-style-type: disc;
+    margin-left: 1.4rem;
+    margin-bottom: 1.4em;
+}
+
+.blog-prose ol {
+    list-style-type: decimal;
+    margin-left: 1.4rem;
+    margin-bottom: 1.4em;
+}
+
+.blog-prose li {
+    margin-bottom: 0.5em;
+    padding-left: 0.25rem;
+    color: color-mix(in srgb, var(--foreground-color) 88%, transparent);
+}
+
+.blog-prose code {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.875em;
+    padding: 0.18em 0.45em;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--foreground-color) 8%, transparent);
+    color: var(--foreground-color);
+}
+
+.blog-prose pre {
+    background: color-mix(in srgb, var(--foreground-color) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--foreground-color) 10%, transparent);
+    border-radius: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin: 1.8em 0;
+    font-family: var(--font-geist-mono), monospace;
+}
+
+.blog-prose pre code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--foreground-color);
+}
+
+.blog-prose hr {
+    border: none;
+    border-top: 1px solid color-mix(in srgb, var(--foreground-color) 12%, transparent);
+    margin: 2.5em 0;
+}
+
+.blog-prose table {
+    width: 100%;
+    margin: 1.8em 0;
+    border-collapse: collapse;
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.875rem;
+}
+
+.blog-prose th,
+.blog-prose td {
+    border: 1px solid color-mix(in srgb, var(--foreground-color) 12%, transparent);
+    padding: 0.65rem 0.85rem;
+    text-align: left;
+}
+
+.blog-prose th {
+    background: color-mix(in srgb, var(--foreground-color) 6%, transparent);
+    font-weight: 600;
+}
+
+
+.blog-prose iframe {
+    max-width: 100%;
+    margin: 2em 0;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+}
