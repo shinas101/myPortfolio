@@ -1,224 +1,181 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { finishTransition, isTransitioning, pushWithTransition } from "../../lib/view-transition";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { finishTransition, pushWithTransition } from "../../lib/view-transition";
+import KoiPond from "../components/koi-pond/koi-pond";
 import TopNav from "../components/top-nav";
-import Container from "../components/container";
-import { isExternal, LAST_PROJECT_KEY, projectHref, projects, projectsByDate, type Project } from "../data/projects";
-
-const GLIDE = 0.18; // share of the remaining distance the strip covers each frame when scrolled with a wheel
-const DESKTOP_QUERY = "(min-width: 1024px)"; // Tailwind's `lg`, where the strip replaces the mobile list
+import { TechIcon } from "../components/tech-icon";
+import { isExternal, projectHref, projectsByDate, type Project } from "../data/projects";
 
 export default function ProjectsRoute() {
-    // Coming back from a project, the slide plays once the page has rendered (and the strip has restored its place,
-    // since a child's effects run before this one).
     useEffect(() => {
         finishTransition();
     }, []);
 
     return (
-        <div className="h-screen w-full overflow-hidden bg-background text-foreground">
-            <MobileLayout />
+        <div className="relative min-h-screen w-full bg-background text-foreground">
+            <KoiPond className="fixed inset-0 z-0 h-full w-full" />
             <TopNav />
-            <DesktopStrip />
+            <main className="relative z-10 mx-auto mt-16 flex w-full max-w-[56rem] flex-col gap-8 border-x border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] bg-[color-mix(in_srgb,var(--background-color)_40%,transparent)] px-5 py-7 shadow-2xl backdrop-blur-[2px] transition-colors duration-300 sm:mt-20 sm:px-8 sm:py-10">
+                <header className="flex flex-col gap-3">
+                    <p className="font-geistMono text-[13px] leading-relaxed tracking-[0.02em] opacity-60 sm:text-[14px]">
+                        selected work &amp; experiments.
+                    </p>
+                    <h1 className="font-brodine text-[30px] font-bold tracking-tight text-foreground sm:text-[38px] lg:text-[46px]">
+                        Projects
+                    </h1>
+                    <p className="max-w-[36rem] font-geistSans text-[15px] leading-relaxed text-[var(--muted-color)] sm:text-[16px]">
+                        A collection of software, AI, and engineering projects.
+                    </p>
+                </header>
+
+                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                    {projectsByDate.map((project, index) => (
+                        <ProjectCard key={project.slug} project={project} priority={index < 2} />
+                    ))}
+                </div>
+            </main>
         </div>
     );
 }
 
-/**
- * Projects side by side in one strip that starts on the page's left column and runs off the right edge. Scrolling
- * anywhere on the page moves it sideways; trackpads can also swipe it directly.
- */
-function DesktopStrip() {
-    const stripRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const strip = stripRef.current;
-        if (!strip) return;
-        const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const desktop = window.matchMedia(DESKTOP_QUERY);
-        // Back from a project, the strip opens on the last one viewed (lined up with the column's left edge), so the
-        // slide lands on it even after stepping through others with previous and next.
-        const last =
-            isTransitioning() && strip.querySelector(`[data-slug="${sessionStorage.getItem(LAST_PROJECT_KEY)}"]`);
-        if (last) {
-            const inset = parseFloat(getComputedStyle(strip).paddingLeft);
-            strip.scrollLeft += last.getBoundingClientRect().left - strip.getBoundingClientRect().left - inset;
-        }
-        let target = strip.scrollLeft;
-        let raf = 0;
-
-        const glide = () => {
-            const gap = target - strip.scrollLeft;
-            if (Math.abs(gap) < 0.5) {
-                strip.scrollLeft = target;
-                raf = 0;
-                return;
-            }
-            strip.scrollLeft += gap * GLIDE;
-            raf = requestAnimationFrame(glide);
-        };
-
-        // Scrolling anywhere on the page moves the strip: a vertical wheel turns into a sideways glide. A sideways
-        // swipe over the strip is left to the browser; anywhere else it glides the strip too.
-        const onWheel = (e: WheelEvent) => {
-            // The strip is only shown on desktop; below that the mobile list scrolls normally.
-            if (!desktop.matches) return;
-            const sideways = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-            if (sideways && strip.contains(e.target as Node)) return;
-            e.preventDefault();
-            const delta = sideways ? e.deltaX : e.deltaY;
-            const max = strip.scrollWidth - strip.clientWidth;
-            if (!raf) target = strip.scrollLeft;
-            target = Math.max(0, Math.min(max, target + (e.deltaMode === 1 ? delta * 16 : delta)));
-            if (still) strip.scrollLeft = target;
-            else if (!raf) raf = requestAnimationFrame(glide);
-        };
-
-        window.addEventListener("wheel", onWheel, { passive: false });
-        return () => {
-            cancelAnimationFrame(raf);
-            window.removeEventListener("wheel", onWheel);
-        };
-    }, []);
-
-    return (
-        <main className="flex h-full flex-col justify-center pt-12 max-lg:hidden">
-            {/* The padding lines the first and last tiles up with the 56rem column the project pages use. */}
-            <div
-                ref={stripRef}
-                className="flex gap-3 overflow-x-auto px-[max(1.5rem,calc((100vw-56rem)/2))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-                {projectsByDate.map((project, i) => (
-                    <StripTile key={project.slug} project={project} priority={i < 2} />
-                ))}
-            </div>
-        </main>
-    );
-}
-
-/** One project: its thumbnail, large, with the name, year and tagline under it. Hovering zooms in and says where it goes. */
-function StripTile({ project, priority }: { project: Project; priority: boolean }) {
+function ProjectCard({ project, priority }: { project: Project; priority: boolean }) {
     const router = useRouter();
     const href = projectHref(project);
     const external = href !== undefined && isExternal(href);
-    const body = (
-        <>
-            <div
-                data-slug={project.slug}
-                className="relative aspect-[3/2] h-[min(62vh,42rem)] overflow-hidden bg-[color-mix(in_srgb,var(--foreground-color)_6%,transparent)]"
-            >
-                <Image
-                    src={project.thumb}
-                    alt=""
-                    fill
-                    // fetchPriority, not preload: a preload would also download it on phones, where the strip is hidden.
-                    fetchPriority={priority ? "high" : undefined}
-                    sizes="(min-height: 1100px) 63rem, 93vh"
-                    quality={90}
-                    className={`object-cover transition-transform duration-700 ease-out ${href ? "group-hover:scale-[1.03]" : ""}`}
-                />
-                {href && (
-                    <span className="pointer-events-none absolute bottom-4 left-4 translate-y-1 rounded-full bg-[rgb(0_0_0/0.55)] px-3 py-1.5 font-geistMono text-[12px] text-dark-foreground opacity-0 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                        {external ? "visit site ↗" : "view project"}
+    const label = external ? "visit project ↗" : "view case study →";
+    const openProject = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (external || !href || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)
+            return;
+        event.preventDefault();
+        pushWithTransition(router, href);
+    };
+
+    return (
+        <article className="group flex flex-col justify-between border border-[color-mix(in_srgb,var(--foreground-color)_10%,transparent)] bg-[color-mix(in_srgb,var(--foreground-color)_3%,transparent)] p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--foreground-color)_24%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground-color)_6%,transparent)] sm:p-4">
+            <div>
+                <ProjectLink href={href} external={external} label={project.name} onClick={openProject}>
+                    <span className="relative mb-3 block aspect-[16/9] w-full overflow-hidden rounded border border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] bg-black/40">
+                        <Image
+                            src={project.thumb}
+                            alt=""
+                            fill
+                            sizes="(max-width: 640px) 100vw, 50vw"
+                            quality={90}
+                            fetchPriority={priority ? "high" : undefined}
+                            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        />
+                        {href && (
+                            <span className="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/75 via-black/20 to-transparent p-2.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                                <span className="font-geistMono text-[11px] text-white/90">{label}</span>
+                                <span className="font-geistMono text-[10px] text-white/70">{project.year}</span>
+                            </span>
+                        )}
                     </span>
+                </ProjectLink>
+
+                <div className="mb-2 flex items-start justify-between gap-2">
+                    <ProjectLink
+                        href={href}
+                        external={external}
+                        label={project.name}
+                        onClick={openProject}
+                        className="font-semibold leading-tight tracking-tight text-foreground hover:underline"
+                    >
+                        {project.name}
+                    </ProjectLink>
+                    <span className="shrink-0 font-geistMono text-[11px] text-[var(--muted-color)]">
+                        {project.year}
+                    </span>
+                </div>
+
+                <p className="mb-3 text-[12px] leading-relaxed text-foreground/70 sm:text-[12.5px]">
+                    {project.description}
+                </p>
+
+                {(project.github || project.live) && (
+                    <div className="mb-3 flex flex-wrap gap-1.5">
+                        {project.github && (
+                            <a
+                                href={project.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`${project.name} source code on GitHub (opens in a new tab)`}
+                                className="inline-flex items-center gap-1.5 border border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] bg-[color-mix(in_srgb,var(--foreground-color)_4%,transparent)] px-2.5 py-1 font-geistMono text-[10px] text-foreground/80 transition-colors hover:border-[color-mix(in_srgb,var(--foreground-color)_24%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground-color)_9%,transparent)] hover:text-foreground focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground"
+                            >
+                                <TechIcon name="github" size={12} useBrandColor={false} />
+                                GitHub
+                                <span aria-hidden="true">↗</span>
+                            </a>
+                        )}
+                        {project.live && (
+                            <a
+                                href={project.live}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`${project.name} live project (opens in a new tab)`}
+                                className="inline-flex items-center gap-1.5 border border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] bg-[color-mix(in_srgb,var(--foreground-color)_4%,transparent)] px-2.5 py-1 font-geistMono text-[10px] text-foreground/80 transition-colors hover:border-[color-mix(in_srgb,var(--foreground-color)_24%,transparent)] hover:bg-[color-mix(in_srgb,var(--foreground-color)_9%,transparent)] hover:text-foreground focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground"
+                            >
+                                Live project
+                                <span aria-hidden="true">↗</span>
+                            </a>
+                        )}
+                    </div>
                 )}
             </div>
-            <div className="mt-3 flex items-baseline gap-3">
-                <span className="whitespace-nowrap text-[15px]">{project.name}</span>
-                <span className="whitespace-nowrap font-geistMono text-[12px] text-[var(--muted-color)]">
-                    {project.year}
-                </span>
-            </div>
-            {project.page?.tagline && (
-                <p className="mt-1 text-[14px] leading-[1.5] text-[var(--muted-color)]">{project.page.tagline}</p>
-            )}
-        </>
-    );
-    // As wide as the thumbnail, so a long tagline wraps instead of pushing the next tile along.
-    const className = "group block w-min shrink-0 outline-none focus-visible:underline";
 
-    if (!href) return <div className={className}>{body}</div>;
+            <div className="flex flex-wrap gap-1.5 border-t border-[color-mix(in_srgb,var(--foreground-color)_8%,transparent)] pt-2">
+                {project.tech.map((technology) => (
+                    <span
+                        key={technology}
+                        className="border border-[color-mix(in_srgb,var(--foreground-color)_10%,transparent)] bg-[color-mix(in_srgb,var(--background-color)_40%,transparent)] px-2 py-0.5 font-geistMono text-[10px] opacity-80 transition-opacity group-hover:opacity-100 sm:text-[10.5px]"
+                    >
+                        {technology}
+                    </span>
+                ))}
+            </div>
+        </article>
+    );
+}
+
+function ProjectLink({
+    href,
+    external,
+    label,
+    onClick,
+    className,
+    children,
+}: {
+    href?: string;
+    external: boolean;
+    label: string;
+    onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+    className?: string;
+    children: React.ReactNode;
+}) {
+    if (!href) return <>{children}</>;
+
+    const classes = className ?? "block outline-none focus-visible:underline";
     if (external) {
         return (
             <a
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${project.name}, opens in a new tab`}
-                className={className}
+                aria-label={`${label}, opens in a new tab`}
+                className={classes}
             >
-                {body}
+                {children}
             </a>
         );
     }
+
     return (
-        <Link
-            href={href}
-            aria-label={project.name}
-            className={className}
-            onClick={(e) => {
-                // Let modified clicks open a new tab as usual.
-                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-                e.preventDefault();
-                // The strip slides off to the left and the project page slides in after it (see globals.css).
-                pushWithTransition(router, href);
-            }}
-        >
-            {body}
+        <Link href={href} aria-label={label} className={classes} onClick={onClick}>
+            {children}
         </Link>
-    );
-}
-
-function MobileLayout() {
-    return (
-        <div className="w-full h-full overflow-y-auto bg-background lg:hidden">
-            <Container as="main" className="flex flex-col pt-20 pb-[12vh]">
-                {projects.map((project, i) => (
-                    <article key={project.index} className="flex flex-col pb-[16vw]">
-                        {/* Image */}
-                        <div className="relative w-full rounded-2xl overflow-hidden" style={{ height: "65vw" }}>
-                            <Image
-                                src={project.thumb}
-                                alt={project.name}
-                                fill
-                                sizes="100vw"
-                                className="object-cover"
-                                fetchPriority={i === 0 ? "high" : undefined}
-                            />
-                        </div>
-
-                        {/* Name */}
-                        <h2 className="font-inter text-[21px] mt-[5vw] mb-2 text-foreground">{project.name}</h2>
-
-                        {/* Description */}
-                        <p className="font-inter text-[17px] text-foreground opacity-60">{project.description}</p>
-
-                        {/* Year */}
-                        <div className="mt-5">
-                            <p className="font-inter text-[17px] text-foreground opacity-60 mb-1">Year</p>
-                            <p className="font-inter text-[17px] text-foreground">{project.year}</p>
-                        </div>
-
-                        {projectHref(project) && (
-                            <a
-                                href={projectHref(project)}
-                                {...(isExternal(projectHref(project) ?? "") && {
-                                    target: "_blank",
-                                    rel: "noopener noreferrer",
-                                })}
-                                className="mt-5 self-start inline-flex items-center justify-center gap-5 whitespace-nowrap font-small text-15 cursor-pointer ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-12/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-15 [&_svg]:shrink-0 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 active:scale-95 transition-all text-foreground py-1 px-4 rounded-full"
-                                style={{ background: "color-mix(in srgb, var(--foreground-color) 8%, transparent)" }}
-                            >
-                                View project
-                            </a>
-                        )}
-                    </article>
-                ))}
-            </Container>
-        </div>
     );
 }

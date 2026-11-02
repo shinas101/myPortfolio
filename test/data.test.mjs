@@ -30,6 +30,18 @@ test("blog posts load metadata and parse UTC dates properly", async () => {
     const firstPost = await getPostBySlug(posts[0].slug);
     assert.ok(firstPost, "single post loads");
     assert.ok(firstPost.html.length > 0, "single post renders html");
+    assert.deepEqual(
+        {
+            slug: firstPost.slug,
+            title: firstPost.title,
+            date: firstPost.date,
+            description: firstPost.description,
+            tags: firstPost.tags,
+            readTime: firstPost.readTime,
+        },
+        posts[0],
+        "single-post and listing metadata stay consistent"
+    );
 });
 
 test("blog service safely rejects malformed or non-existent slugs", async () => {

@@ -8,7 +8,6 @@ export type PixelIconName =
     | "browser"
     | "bug"
     | "keyboard"
-    | "cloud"
     | "cog"
     | "box"
     | "star"
@@ -335,44 +334,6 @@ const ICONS: Record<PixelIconName, React.ReactNode> = {
             <path d="M10.67 9.145h1.52v3.05h-1.52Z" fill="currentColor" strokeWidth="1"></path>
             <path d="M3.05 21.335h4.57v1.53H3.05Z" fill="currentColor" strokeWidth="1"></path>
             <path d="M3.05 18.285h4.57v1.53H3.05Z" fill="currentColor" strokeWidth="1"></path>
-        </g>
-    ),
-    cloud: (
-        <g>
-            <path d="M30.47 12.195H32v6.09h-1.53Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M28.95 18.285h1.52v1.53h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M28.95 10.665h1.52v1.53h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M27.43 19.815h1.52v1.52h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M27.43 9.145h1.52v1.52h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path
-                d="m24.38 7.625 0 -1.53 -1.53 0 0 3.05 4.58 0 0 -1.52 -3.05 0z"
-                fill="currentColor"
-                strokeWidth="1"
-            ></path>
-            <path d="M21.33 21.335h6.1v1.52h-6.1Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M21.33 9.145h1.52v1.52h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M21.33 4.575h1.52v1.52h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M19.81 10.665h1.52v1.53h-1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M18.28 3.045h3.05v1.53h-3.05Z" fill="currentColor" strokeWidth="1"></path>
-            <path
-                d="m13.71 19.815 0 4.57 -3.05 0 0 1.52 1.53 0 0 1.52 1.52 0 0 1.53 1.53 0 0 1.52 1.52 0 0 -1.52 1.52 0 0 -1.53 1.53 0 0 -1.52 1.52 0 0 -1.52 -3.05 0 0 -4.57 -4.57 0z"
-                fill="currentColor"
-                strokeWidth="1"
-            ></path>
-            <path d="M13.71 1.525h4.57v1.52h-4.57Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M10.66 12.195h1.53v1.52h-1.53Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M10.66 3.045h3.05v1.53h-3.05Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M9.14 10.665h1.52v1.53H9.14Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M9.14 4.575h1.52v1.52H9.14Z" fill="currentColor" strokeWidth="1"></path>
-            <path
-                d="m7.62 9.145 -4.57 0 0 1.52 6.09 0 0 -4.57 -1.52 0 0 3.05z"
-                fill="currentColor"
-                strokeWidth="1"
-            ></path>
-            <path d="M3.05 21.335h7.61v1.52H3.05Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M1.52 19.815h1.53v1.52H1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M1.52 10.665h1.53v1.53H1.52Z" fill="currentColor" strokeWidth="1"></path>
-            <path d="M0 12.195h1.52v7.62H0Z" fill="currentColor" strokeWidth="1"></path>
         </g>
     ),
     keyboard: (

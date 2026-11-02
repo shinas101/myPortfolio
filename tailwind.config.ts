@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import animate from "tailwindcss-animate";
 import plugin from "tailwindcss/plugin";
 
 export default {
@@ -36,30 +35,19 @@ export default {
                     "0%, 49%": { opacity: "1" },
                     "50%, 100%": { opacity: "0" },
                 },
-                "accordion-down": {
-                    from: { height: "0" },
-                    to: { height: "var(--radix-accordion-content-height)" },
-                },
-                "accordion-up": {
-                    from: { height: "var(--radix-accordion-content-height)" },
-                    to: { height: "0" },
-                },
             },
             animation: {
                 blink: "blink 1.1s step-end infinite",
-                "accordion-down": "accordion-down 0.2s ease-out",
-                "accordion-up": "accordion-up 0.2s ease-out",
             },
             fontFamily: {
                 inter: "var(--font-inter)",
-                playfairDisplay: "var(--font-playfair-display)",
+                brodine: "var(--font-brodine)",
                 geistMono: "var(--font-geist-mono)",
                 geistSans: "var(--font-geist-sans)",
             },
         },
     },
     plugins: [
-        animate,
         plugin(({ addBase, theme }) => {
             addBase({
                 ":root": {

@@ -61,7 +61,7 @@ export default async function BlogPostPage({ params }: Props) {
                         <span>{post.readTime}</span>
                     </div>
 
-                    <h1 className="font-playfairDisplay text-[26px] sm:text-[36px] md:text-[42px] lg:text-[46px] font-bold leading-[1.18] tracking-tight text-foreground">
+                    <h1 className="font-brodine text-[26px] sm:text-[36px] md:text-[42px] lg:text-[46px] font-bold leading-[1.18] tracking-tight text-foreground">
                         {post.title}
                     </h1>
 

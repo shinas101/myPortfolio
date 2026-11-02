@@ -1,18 +1,22 @@
-import { Inter, Playfair_Display } from "next/font/google";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { PostHogInitializer } from "../context-providers/posthog-initializer";
+import type { ReactNode } from "react";
 
 const inter = Inter({
     subsets: ["latin"],
     variable: "--font-inter",
 });
 
-const fontPlayfairDisplay = Playfair_Display({
-    subsets: ["latin"],
-    variable: "--font-playfair-display",
-    weight: "400",
+const fontBrodine = localFont({
+    src: [
+        { path: "./fonts/brodine-regular.otf", weight: "400", style: "normal" },
+        { path: "./fonts/brodine-italic.otf", weight: "400", style: "italic" },
+    ],
+    variable: "--font-brodine",
 });
 
 const fontGeistSans = localFont({
@@ -28,7 +32,7 @@ const fontGeistMono = localFont({
     variable: "--font-geist-mono",
 });
 
-export const metadata = {
+export const metadata: Metadata = {
     // Share images need absolute URLs, so relative ones resolve against the live site.
     metadataBase: new URL("https://github.com/shinas101"),
     title: "Shinas Samoon",
@@ -36,11 +40,11 @@ export const metadata = {
     twitter: { card: "summary_large_image" },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
     return (
         <html lang="en" className="dark">
             <body
-                className={`${inter.variable} ${fontPlayfairDisplay.variable} ${fontGeistMono.variable} ${fontGeistSans.variable} scroll-smooth overflow-x-clip bg-background text-foreground`}
+                className={`${inter.variable} ${fontBrodine.variable} ${fontGeistMono.variable} ${fontGeistSans.variable} scroll-smooth overflow-x-clip bg-background text-foreground`}
             >
                 <PostHogInitializer>{children}</PostHogInitializer>
             </body>

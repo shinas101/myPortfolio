@@ -6,27 +6,21 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import TopNav from "../../components/top-nav";
+import KoiPond from "../../components/koi-pond/koi-pond";
 import InlineLink from "../../components/inline-link";
-import {
-    LAST_PROJECT_KEY,
-    projects,
-    projectsByDate,
-    type Project,
-    type Prose,
-    type Shot,
-    type StoryBlock,
-} from "../../data/projects";
+import { projects, projectsByDate, type Project, type Prose, type Shot, type StoryBlock } from "../../data/projects";
 import { finishTransition, isTransitioning, pushWithTransition } from "../../../lib/view-transition";
 
-/** One centred frame holds everything, so text and media share both edges. */
-const FRAME = "mx-auto w-full max-w-[56rem]";
+/** One centered frame holds the case study while the pond remains visible around it. */
+const FRAME = "mx-auto w-full max-w-[64rem]";
 const BODY = "text-[16px] leading-[1.7] [text-wrap:pretty]";
 const MUTED = "text-[var(--muted-color)]";
+const EYEBROW = "font-geistMono text-[11px] uppercase tracking-[0.16em] text-[var(--muted-color)]";
 // Next re-encodes at 75 by default, which smears the small UI text in screenshots.
 const IMAGE_QUALITY = 90;
 const GLIDE = 0.18; // share of the remaining distance the page covers each frame when scrolled with a wheel
 const MEDIA =
-    "block aspect-video h-auto w-full rounded-[6px] bg-black shadow-[0_0_0_1px_color-mix(in_srgb,var(--foreground-color)_8%,transparent)]";
+    "block aspect-video h-auto w-full rounded-[6px] bg-black object-cover object-center shadow-[0_0_0_1px_color-mix(in_srgb,var(--foreground-color)_8%,transparent)]";
 
 export default function ProjectPage({ slug }: { slug: string }) {
     const router = useRouter();
@@ -92,9 +86,6 @@ export default function ProjectPage({ slug }: { slug: string }) {
     useEffect(() => {
         finishTransition();
     }, []);
-    useEffect(() => {
-        sessionStorage.setItem(LAST_PROJECT_KEY, slug);
-    }, [slug]);
 
     // Previous and next follow the strip's order and wrap around, so there's always somewhere to go.
     const pages = projectsByDate.filter((p) => p.page);
@@ -104,13 +95,15 @@ export default function ProjectPage({ slug }: { slug: string }) {
 
     if (!project?.page) return null;
     const { page } = project;
+    const sourceLink = project.github ?? project.live;
 
     return (
         <div className="min-h-screen w-full bg-background text-foreground">
+            <KoiPond className="fixed inset-0 z-0 h-full w-full" />
             <TopNav overCover={overCover} />
             {page.cover && (
-                <div>
-                    <div ref={coverRef} className="relative h-[clamp(180px,26vw,440px)] w-full overflow-hidden">
+                <div className="relative z-10">
+                    <div ref={coverRef} className="relative h-[clamp(220px,34vw,460px)] w-full overflow-hidden">
                         <Image
                             src={page.cover}
                             alt=""
@@ -118,9 +111,9 @@ export default function ProjectPage({ slug }: { slug: string }) {
                             preload
                             sizes="100vw"
                             quality={IMAGE_QUALITY}
-                            className="object-cover object-[78%_top]"
+                            className="object-cover object-center"
                         />
-                        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(to_bottom,transparent,var(--background-color))]" />
+                        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(6_12_24/0.12),transparent_35%,var(--background-color))]" />
                     </div>
                 </div>
             )}
@@ -129,36 +122,62 @@ export default function ProjectPage({ slug }: { slug: string }) {
                 initial={arrivedSliding ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className={`${FRAME} px-6 pb-40 font-geistSans lg:box-content ${page.cover ? "pt-10 lg:pt-14" : "pt-28 lg:pt-40"}`}
+                data-koi-avoid
+                className={`relative z-10 ${FRAME} px-4 pb-24 font-geistSans sm:px-7 lg:px-8 ${page.cover ? "-mt-24" : "pt-28 lg:pt-36"}`}
             >
-                <header>
-                    <Link
-                        href="/projects"
-                        onClick={(e) => {
-                            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-                            e.preventDefault();
-                            // The reverse of opening a project: this page slides off to the right, uncovering the strip.
-                            pushWithTransition(router, "/projects", "back");
-                        }}
-                        className={`text-[14px] ${MUTED} outline-none transition-colors hover:text-foreground focus-visible:text-foreground`}
-                    >
-                        ← Projects
-                    </Link>
-                    <h1 className="mt-10 text-[28px] font-medium leading-[1.2] tracking-[-0.015em]">{project.name}</h1>
-                    <p className={`mt-1 text-[16px] ${MUTED}`}>{page.tagline}</p>
-                    <p className={`${BODY} mt-8`}>
-                        <Parts parts={page.about} />
+                <header className="border border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] bg-[color-mix(in_srgb,var(--background-color)_78%,transparent)] p-5 shadow-2xl backdrop-blur-md sm:p-8 lg:p-10">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <Link
+                            href="/projects"
+                            onClick={(e) => {
+                                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                                e.preventDefault();
+                                // The reverse of opening a project: this page slides off to the right, uncovering the strip.
+                                pushWithTransition(router, "/projects", "back");
+                            }}
+                            className={`text-[13px] ${MUTED} outline-none transition-colors hover:text-foreground focus-visible:text-foreground`}
+                        >
+                            ← all projects
+                        </Link>
+                        <span className={EYEBROW}>
+                            case study <span className="mx-1.5 opacity-40">/</span> {project.index}{" "}
+                            <span className="mx-1.5 opacity-40">/</span> {project.year}
+                        </span>
+                    </div>
+                    <h1 className="mt-8 max-w-[52rem] font-brodine text-[34px] font-bold leading-[1.08] tracking-[-0.025em] text-foreground sm:text-[44px] lg:text-[56px]">
+                        {project.name}
+                    </h1>
+                    <p className="mt-4 max-w-[48rem] text-[17px] leading-relaxed text-[var(--muted-color)] sm:text-[19px]">
+                        {page.tagline}
                     </p>
-                    {project.link && (
-                        <p className="mt-4 text-[14px]">
-                            <InlineLink href={project.link}>
-                                {new URL(project.link).hostname.replace(/^www\./, "")}
+                    <p className={`${BODY} mt-6 max-w-[52rem] text-foreground/85`}>{page.overview}</p>
+
+                    <div className="mt-7 flex flex-wrap gap-2">
+                        {project.tech.map((technology) => (
+                            <span
+                                key={technology}
+                                className="border border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] bg-[color-mix(in_srgb,var(--foreground-color)_4%,transparent)] px-2.5 py-1 font-geistMono text-[11px] text-foreground/80"
+                            >
+                                {technology}
+                            </span>
+                        ))}
+                    </div>
+
+                    {sourceLink && (
+                        <p className="mt-7 text-[13px]">
+                            <InlineLink href={sourceLink}>
+                                {project.github ? "GitHub repository" : "Live project"}{" "}
+                                <span aria-hidden="true">↗</span>
                             </InlineLink>
                         </p>
                     )}
                 </header>
 
-                <div className="mt-16">
+                <section className="mt-8 border border-[color-mix(in_srgb,var(--foreground-color)_10%,transparent)] bg-[color-mix(in_srgb,var(--background-color)_52%,transparent)] p-3 backdrop-blur-sm sm:p-4">
+                    <div className="mb-3 flex items-center justify-between px-1">
+                        <span className={EYEBROW}>product preview</span>
+                        <span className="font-geistMono text-[10px] text-[var(--muted-color)]">FIG. 01</span>
+                    </div>
                     {page.video ? (
                         // Muted autoplay loops like a gif; with reduced motion it waits for the viewer to press play.
                         <video
@@ -174,20 +193,59 @@ export default function ProjectPage({ slug }: { slug: string }) {
                             className={MEDIA}
                         />
                     ) : (
-                        <Image
-                            src={page.poster}
-                            alt={`${project.name}, ${page.tagline}`}
-                            width={1920}
-                            height={1080}
-                            preload
-                            sizes="(min-width: 1024px) 56rem, 100vw"
-                            quality={IMAGE_QUALITY}
-                            className={MEDIA}
-                        />
+                        <div className="relative aspect-video overflow-hidden rounded-[6px] bg-black">
+                            <Image
+                                src={page.poster}
+                                alt={`${project.name}, ${page.tagline}`}
+                                fill
+                                preload
+                                sizes="(min-width: 1024px) 62rem, 100vw"
+                                quality={IMAGE_QUALITY}
+                                className="object-cover object-center"
+                            />
+                        </div>
                     )}
-                </div>
+                </section>
 
-                {page.story && <Story blocks={page.story} still={still} />}
+                <section className="mt-16 sm:mt-20">
+                    <div className="mb-6 flex items-end justify-between gap-4 border-b border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] pb-4">
+                        <div>
+                            <p className={EYEBROW}>engineering breakdown</p>
+                            <h2 className="mt-2 font-brodine text-[27px] font-semibold tracking-tight sm:text-[34px]">
+                                Technical highlights
+                            </h2>
+                        </div>
+                        <span className="pb-1 font-geistMono text-[11px] text-[var(--muted-color)]">
+                            {page.highlights.length.toString().padStart(2, "0")} details
+                        </span>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        {page.highlights.map((highlight, index) => (
+                            <article
+                                key={highlight.label}
+                                className="border border-[color-mix(in_srgb,var(--foreground-color)_10%,transparent)] bg-[color-mix(in_srgb,var(--background-color)_52%,transparent)] p-5 backdrop-blur-sm transition-colors duration-200 hover:border-[color-mix(in_srgb,var(--foreground-color)_22%,transparent)] hover:bg-[color-mix(in_srgb,var(--background-color)_68%,transparent)] sm:p-6"
+                            >
+                                <span className="font-geistMono text-[11px] text-[var(--muted-color)]">
+                                    {String(index + 1).padStart(2, "0")}
+                                </span>
+                                <p className="mt-4 text-[14px] leading-[1.75] text-foreground/85 sm:text-[15px]">
+                                    <strong className="font-semibold text-foreground">{highlight.label}:</strong>{" "}
+                                    {highlight.detail}
+                                </p>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                {page.story && (
+                    <section className="mt-16 border-t border-[color-mix(in_srgb,var(--foreground-color)_12%,transparent)] pt-8 sm:mt-20 sm:pt-10">
+                        <p className={EYEBROW}>implementation notes</p>
+                        <h2 className="mt-2 font-brodine text-[27px] font-semibold tracking-tight sm:text-[34px]">
+                            Under the hood
+                        </h2>
+                        <Story blocks={page.story} still={still} />
+                    </section>
+                )}
 
                 {pages.length > 1 && (
                     <nav
@@ -376,15 +434,21 @@ function Story({ blocks, still }: { blocks: StoryBlock[]; still: boolean }) {
 }
 
 function Parts({ parts }: { parts: Prose }) {
-    return parts.map((part, i) =>
-        typeof part === "string" ? (
-            part
-        ) : (
-            <InlineLink key={i} href={part.href}>
+    return parts.map((part, i) => {
+        if (typeof part === "string") return part;
+        if ("href" in part) {
+            return (
+                <InlineLink key={i} href={part.href}>
+                    {part.text}
+                </InlineLink>
+            );
+        }
+        return (
+            <strong key={i} className="font-semibold text-foreground">
                 {part.text}
-            </InlineLink>
-        )
-    );
+            </strong>
+        );
+    });
 }
 
 const HOVER_INTENT_MS = 150;
@@ -488,7 +552,7 @@ function Gallery({ title, shots, start = 0 }: { title?: string; shots: Shot[]; s
                                 fill
                                 sizes="(min-width: 1024px) 48rem, 1px"
                                 quality={IMAGE_QUALITY}
-                                className={`object-cover object-[50%_35%] transition-[filter,opacity] duration-500 motion-reduce:transition-none ${
+                                className={`object-cover object-center transition-[filter,opacity] duration-500 motion-reduce:transition-none ${
                                     open
                                         ? ""
                                         : "opacity-30 grayscale group-hover/row:opacity-45 group-hover:!opacity-70"
