@@ -190,6 +190,20 @@ export class BlogUtils {
     }
 }
 
+function createPostMeta(slug: string, data: Record<string, unknown>, content: string): BlogPostMeta {
+    return {
+        slug,
+        title:
+            typeof data.title === "string" && data.title.trim().length > 0
+                ? data.title
+                : BlogUtils.formatFallbackTitle(slug),
+        date: BlogUtils.formatDate(data.date) || (data.date ? String(data.date) : ""),
+        description: typeof data.description === "string" ? data.description : "",
+        tags: BlogUtils.normalizeTags(data.tags),
+        readTime: BlogUtils.calculateReadTime(content),
+    };
+}
+
 // ============================================================================
 // 5. IN-MEMORY CACHING LAYER
 // ============================================================================
@@ -371,38 +385,13 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
         const fileContent = fs.readFileSync(filePath, "utf-8");
         const { data, content } = matter(fileContent);
-
-        const readTime = BlogUtils.calculateReadTime(content);
+        const meta = createPostMeta(slug, data, content);
         const html = await MarkdownEngine.compile(content, slug);
-
-        const post: BlogPost = {
-            slug,
-            title:
-                typeof data.title === "string" && data.title.trim().length > 0
-                    ? data.title
-                    : BlogUtils.formatFallbackTitle(slug),
-            date: BlogUtils.formatDate(data.date) || (data.date ? String(data.date) : ""),
-            description: typeof data.description === "string" ? data.description : "",
-            tags: BlogUtils.normalizeTags(data.tags),
-            readTime,
-            content,
-            html,
-        };
+        const post: BlogPost = { ...meta, content, html };
 
         BlogCache.setFullPost(slug, post, mtimeMs);
         // Also seed metadata cache to accelerate subsequent list queries
-        BlogCache.setPostMeta(
-            slug,
-            {
-                slug: post.slug,
-                title: post.title,
-                date: post.date,
-                description: post.description,
-                tags: post.tags,
-                readTime: post.readTime,
-            },
-            mtimeMs
-        );
+        BlogCache.setPostMeta(slug, meta, mtimeMs);
 
         logger.debug(`Compiled and cached post: ${slug}`);
         return post;
@@ -450,19 +439,7 @@ export async function getAllPosts(): Promise<BlogPostMeta[]> {
         try {
             const fileContent = fs.readFileSync(filePath, "utf-8");
             const { data, content } = matter(fileContent);
-
-            const readTime = BlogUtils.calculateReadTime(content);
-            const meta: BlogPostMeta = {
-                slug,
-                title:
-                    typeof data.title === "string" && data.title.trim().length > 0
-                        ? data.title
-                        : BlogUtils.formatFallbackTitle(slug),
-                date: BlogUtils.formatDate(data.date) || (data.date ? String(data.date) : ""),
-                description: typeof data.description === "string" ? data.description : "",
-                tags: BlogUtils.normalizeTags(data.tags),
-                readTime,
-            };
+            const meta = createPostMeta(slug, data, content);
 
             BlogCache.setPostMeta(slug, meta, mtimeMs);
             posts.push(meta);

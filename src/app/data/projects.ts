@@ -6,15 +6,15 @@ export type Project = {
     description: string;
     tech: string[];
     year: string;
-    /** Omit to show the project without sending anyone anywhere. */
-    link?: string;
+    github?: string;
+    live?: string;
     /** Small raster preview, rendered from the original artwork. */
     thumb: string;
     /** A project with its own page on the site; its tiles link there instead of out. */
     page?: {
         tagline: string;
-        /** The write-up under the tagline, so the page doesn't repeat it. */
-        about: Prose;
+        overview: string;
+        highlights: { label: string; detail: string }[];
         /** Omit for a project without a demo; the poster then stands alone as the lead image. */
         video?: string;
         poster: string;
@@ -27,8 +27,8 @@ export type Project = {
     };
 };
 
-/** Plain text with inline links. */
-export type Prose = (string | { text: string; href: string })[];
+/** Inline text with optional links or emphasis. */
+export type Prose = (string | { text: string; href: string } | { text: string; strong: true })[];
 
 /** A paragraph is plain text with inline links; a clip is a short muted video. */
 export type StoryBlock =
@@ -59,7 +59,7 @@ export const projects: Project[] = [
         slug: "clinical-voice-ai",
         name: "ABC Health Care — Clinical Voice AI",
         description:
-            "Production-grade WebRTC virtual receptionist platform with LiveKit Agents, Silero VAD barge-in interruption, OpenAI GPT-4o clinical triage guardrails, 1536-d pgvector patient memory, and resilient dual-database failover.",
+            "Real-time clinical voice platform combining WebRTC streaming, interruptible speech, GPT-4o triage, semantic patient memory, and resilient data storage.",
         tech: [
             "LiveKit Agents",
             "WebRTC",
@@ -72,17 +72,35 @@ export const projects: Project[] = [
             "Docker",
         ],
         year: "2025",
-        link: "https://github.com/shinas101/Ai-Receptionist",
+        github: "https://github.com/shinas101/Ai-Receptionist",
         thumb: "/projects/clinical-voice-ai/clinical-voice-ai-preview.webp",
         page: {
-            tagline: "Voice-driven clinical receptionist & medical triage platform with semantic patient memory.",
-            about: [
-                "Architected a production-grade, voice-driven virtual receptionist (Mia) and clinical scheduling system built with LiveKit Agents over WebRTC, delivering sub-second audio turnaround times without third-party SaaS silos.",
-                "Integrated Silero VAD (Voice Activity Detection) running locally in streaming frames for instant human speech barge-in, immediately canceling in-flight text-to-speech when patients interrupt.",
-                "Enforced clinical safety triage guardrails using prompt-engineered GPT-4o function calling: detects acute red-flag symptoms (chest pain, stroke signs) and halts booking to direct callers to emergency dispatch (112 / 108 / 911).",
-                "Constructed 1536-dimensional semantic patient memory stored in PostgreSQL with pgvector, enabling the assistant to recall caller history, recurring medical preferences, and scheduling patterns via cosine similarity search.",
-                "Architected a zero-configuration dual-database failover engine leveraging asyncpg connection pooling for PostgreSQL 16 with automatic fallback to an in-process SQLite buffer (clinic.db) to ensure continuous uptime during network disruptions.",
-                "Hardened containerized infrastructure behind an Nginx ingress proxy featuring TLS 1.3 encryption, leaky-bucket rate limiting (2 req/s token minting, 10 req/s CRUD), dynamic CORS enforcement, and automated SAN SSL generation.",
+            tagline:
+                "A real-time WebRTC voice agent for clinical intake, appointment scheduling, and safety-aware triage.",
+            overview:
+                "LiveKit streams audio to async Python workers; GPT-4o tools, pgvector memory, and resilient storage support clinical workflows.",
+            highlights: [
+                { label: "Audio transport", detail: "LiveKit + WebRTC stream caller audio to async Python workers." },
+                {
+                    label: "Interruption handling",
+                    detail: "Silero VAD detects speech and cancels active TTS when callers interrupt.",
+                },
+                {
+                    label: "Clinical routing",
+                    detail: "GPT-4o function calls handle scheduling and triage; red flags trigger emergency guidance.",
+                },
+                {
+                    label: "Semantic memory",
+                    detail: "pgvector retrieves caller context from 1,536-dimensional PostgreSQL embeddings.",
+                },
+                {
+                    label: "Database resilience",
+                    detail: "asyncpg pools PostgreSQL connections; SQLite buffers writes during outages.",
+                },
+                {
+                    label: "Ingress security",
+                    detail: "Docker + Nginx provide TLS 1.3, CORS, rate limits, and automated SAN certificates.",
+                },
             ],
             poster: "/projects/clinical-voice-ai/clinical-voice-ai-hero.webp",
             cover: "/projects/clinical-voice-ai/clinical-voice-ai-cover.webp",
@@ -90,32 +108,35 @@ export const projects: Project[] = [
             story: [
                 {
                     kind: "heading",
-                    text: "Real-Time Telephony & Sub-Second Latency Pipeline",
+                    text: "Streaming and interruption handling",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Medical receptionist workflows demand uninterrupted uptime and conversational voice cadence. By streaming WebRTC audio directly to LiveKit SFU workers and coupling Silero VAD with OpenAI GPT-4o function calling, Mia achieves sub-second conversational latency and never talks over patients.",
+                        { text: "Audio pipeline", strong: true },
+                        " — LiveKit routes WebRTC streams to async workers; Silero VAD cancels TTS on interruption.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "1536-Dimensional Semantic Memory with pgvector",
+                    text: "Caller memory",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Conversations automatically generate semantic patient profile memories stored as 1536-dimensional vector embeddings. When returning callers verify their phone number, historical clinical context and scheduling preferences are retrieved via vector cosine similarity and injected into the LLM context window.",
+                        { text: "Retrieval", strong: true },
+                        " — pgvector searches 1,536-dimensional PostgreSQL embeddings for verified caller context.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "Zero-Configuration Dual-Database Failover",
+                    text: "Persistence and ingress",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "To prevent lost patient records or dropped bookings during network drops, the backend leverages asyncpg connection pooling for PostgreSQL 16 with automated schema migrations and seamlessly switches to an embedded SQLite datastore (clinic.db) if the primary datastore becomes unreachable.",
+                        { text: "Resilience", strong: true },
+                        " — asyncpg pools PostgreSQL; SQLite buffers writes. Nginx applies TLS, CORS, and rate limits.",
                     ],
                 },
             ],
@@ -126,7 +147,7 @@ export const projects: Project[] = [
         slug: "news-flashcard",
         name: "News FlipCard",
         description:
-            "Tactile 3D card-stack news reader with 100% local NLP summarization (PyTorch T5-small & Luhn algorithm), SQLite WAL SWR caching, and universal embed support.",
+            "News aggregation and local summarization system with parallel feed extraction, bilingual NLP pipelines, SQLite SWR caching, and an embeddable Next.js interface.",
         tech: [
             "FastAPI",
             "Python",
@@ -138,16 +159,35 @@ export const projects: Project[] = [
             "Selectolax",
         ],
         year: "2025",
-        link: "https://newsflashcard.shinas.dev/",
+        github: "https://github.com/shinas101/NewsFlashcard",
+        live: "https://newsflashcard.shinas.dev/",
         thumb: "/projects/news-flashcard/news-flashcard-cover.webp",
         page: {
-            tagline: "Tactile 3D card-stack news reader powered by zero-API-cost local NLP summarization.",
-            about: [
-                "Architected a high-performance news aggregation and summarization engine that curates breaking national (English) and regional (Malayalam) headlines with zero external LLM API dependency.",
-                "Engineered a dual-pipeline NLP summarizer: an in-process, thread-safe PyTorch singleton running Hugging Face's google-t5/t5-small for English headlines, paired with a tuned Luhn frequency-scoring algorithm for morphological Malayalam text extraction.",
-                "Implemented a resilient Stale-While-Revalidate (SWR) cache backed by SQLite in Write-Ahead Logging (WAL) mode (redis_cache.db), delivering sub-millisecond cached responses while background worker tasks asynchronously revalidate feeds.",
-                "Constructed a multi-source parallel scraping orchestrator utilizing selectolax and BeautifulSoup4, complete with a Google News batchexecute URL decoder to resolve canonical publisher links across 10+ major outlets.",
-                "Designed an immersive 3D card stack interface in Next.js 15 featuring realistic paper rim highlights, fanning deck physics, swipe-to-draw gestures, and an interactive embeddable widget engine.",
+            tagline:
+                "A full-stack news reader with local English and Malayalam summarization and a tactile 3D card interface.",
+            overview:
+                "FastAPI aggregates publisher feeds and runs local English/Malayalam summarization; SQLite WAL backs a static Next.js reader and embed.",
+            highlights: [
+                {
+                    label: "Feed ingestion",
+                    detail: "FastAPI fetches 10+ publisher feeds concurrently with selectolax and BeautifulSoup4.",
+                },
+                {
+                    label: "Link normalization",
+                    detail: "A Google News batchexecute decoder resolves redirects to canonical article URLs.",
+                },
+                {
+                    label: "Local summarization",
+                    detail: "PyTorch T5-small summarizes English; tuned Luhn extraction handles Malayalam.",
+                },
+                {
+                    label: "Caching",
+                    detail: "SQLite WAL serves stale articles while background tasks refresh feeds.",
+                },
+                {
+                    label: "Frontend and embed",
+                    detail: "Next.js 15 renders swipeable 3D cards; FastAPI serves the static app and widget.",
+                },
             ],
             poster: "/projects/news-flashcard/news-flashcard-hero.webp",
             cover: "/projects/news-flashcard/news-flashcard-cover.webp",
@@ -165,12 +205,13 @@ export const projects: Project[] = [
                 },
                 {
                     kind: "heading",
-                    text: "Tactile 3D Card Stack Illusion",
+                    text: "Interactive card interface",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Rather than presenting another generic vertical newsfeed, News FlipCard simulates a physical deck of matte burgundy cards (#9e3547) rendered with warm film-grain paper textures, multi-sided paper rim highlights, and cast drop-shadows. The deck responds smoothly to drag, swipe, and click gestures across both desktop trackpads and mobile touchscreens.",
+                        { text: "Card UI", strong: true },
+                        " — Next.js renders a swipeable 3D stack and embeddable reader.",
                     ],
                 },
                 {
@@ -182,40 +223,31 @@ export const projects: Project[] = [
                 },
                 {
                     kind: "heading",
-                    text: "Zero-API-Cost Local NLP Summarization",
+                    text: "Bilingual local summarization",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Unlike conventional AI wrappers that incur per-token cloud costs and rate limits with external LLMs, News FlipCard executes all summarization locally on the server:",
-                    ],
-                },
-                {
-                    kind: "text",
-                    parts: [
-                        "• English Pipeline: A thread-safe singleton PyTorch inference worker executing Hugging Face's google-t5/t5-small to distill long-form reports into 60-word briefs while stripping wire service tags (PTI, ANI, Reuters).",
-                    ],
-                },
-                {
-                    kind: "text",
-                    parts: [
-                        "• Malayalam Pipeline: High-speed extractive summarization utilizing a tuned Luhn frequency-scoring algorithm optimized for complex Malayalam Unicode morphology.",
+                        { text: "Offline NLP", strong: true },
+                        " — PyTorch T5-small summarizes English; Luhn extraction summarizes Malayalam.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "Resilient Scraping, SWR Caching & Single-Dyno Deployment",
+                    text: "Feed ingestion, caching, and deployment",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Feed ingestion runs asynchronously across 10+ sources (Manorama, Mathrubhumi, Asianet, The Hindu, Times of India, NDTV, and Indian Express) with connection pooling and automated fallback parser engines (selectolax and BeautifulSoup4). Google News redirect tokens are resolved via a custom batchexecute URL decoder.",
+                        { text: "Ingestion", strong: true },
+                        " — Concurrent feed parsing normalizes publisher URLs before caching.",
                     ],
                 },
                 {
                     kind: "text",
                     parts: [
-                        "A Stale-While-Revalidate (SWR) cache layer implemented in SQLite WAL mode (redis_cache.db) guarantees instantaneous page loads while worker threads refresh articles in the background. The entire application is packaged as a unified single-dyno ASGI service where FastAPI directly mounts and serves the Next.js 15 static export with zero CORS latency.",
+                        { text: "Serving", strong: true },
+                        " — SQLite WAL supports stale-while-revalidate; FastAPI hosts the API and static export.",
                     ],
                 },
             ],
@@ -226,18 +258,41 @@ export const projects: Project[] = [
         slug: "pdf-chatbot",
         name: "PDFChatbot — Multimodal PDF RAG & Vision OCR",
         description:
-            "Multimodal RAG and 2-tier Vision OCR intelligence engine with PyMuPDF figure extraction, Google Gemini 2.5 Flash, FAISS vector indexing, and SSE token streaming.",
+            "Document-question-answering pipeline combining PDF parsing, hybrid OCR, multimodal embeddings, FAISS retrieval, and streamed cited responses.",
         tech: ["FastAPI", "Google Gemini 2.5", "LangChain", "FAISS", "PyMuPDF", "pytesseract", "SSE", "Python"],
         year: "2025",
-        link: "https://github.com/shinas101/pdf-rag-chatbot",
+        github: "https://github.com/shinas101/pdf-rag-chatbot",
         thumb: "/projects/pdf-chatbot/pdf-chatbot-preview.webp",
         page: {
-            tagline: "Multimodal PDF RAG & 2-tier Vision OCR engine with real-time SSE token streaming.",
-            about: [
-                "Constructed a production-grade multimodal RAG pipeline combining LangChain, Google Gemini 2.5 Flash, and FAISS to query digital and scanned PDFs with pinpoint page citations.",
-                "Engineered a 2-tier hybrid OCR engine: fast local OCR via pytesseract with an automatic fallback to Gemini 2.5 Flash multimodal vision OCR for noisy, scanned documents.",
-                "Extracted embedded figures, diagrams, and tables at native 300 DPI using PyMuPDF (fitz), powering an HD figure lightbox with pan, zoom, and direct asset download.",
-                "Implemented Server-Sent Events (SSE) via FastAPI for asynchronous token streaming with interactive citation badges and document intelligence actions (one-click executive summary and FAQ generation).",
+            tagline:
+                "A multimodal retrieval-augmented generation pipeline for asking cited questions about PDF documents.",
+            overview:
+                "FastAPI parses PDFs, applies local or vision OCR, indexes text and image context in FAISS, and streams cited answers over SSE.",
+            highlights: [
+                {
+                    label: "PDF parsing",
+                    detail: "PyMuPDF extracts text and figures; scanned pages are rasterized at 300 DPI.",
+                },
+                {
+                    label: "Hybrid OCR",
+                    detail: "pytesseract handles local OCR; Gemini 2.5 Flash Vision covers difficult scans.",
+                },
+                {
+                    label: "Multimodal retrieval",
+                    detail: "LangChain + FAISS index text and figure captions for Gemini responses.",
+                },
+                {
+                    label: "Page citations",
+                    detail: "Page metadata links retrieved chunks to source pages.",
+                },
+                {
+                    label: "Streaming API",
+                    detail: "FastAPI streams tokens over SSE and provides summary and FAQ actions.",
+                },
+                {
+                    label: "Temporary files",
+                    detail: "PDFs, figures, and indexes are cleared on reset or server startup.",
+                },
             ],
             poster: "/projects/pdf-chatbot/pdf-chatbot-hero.webp",
             cover: "/projects/pdf-chatbot/pdf-chatbot-cover.webp",
@@ -245,32 +300,35 @@ export const projects: Project[] = [
             story: [
                 {
                     kind: "heading",
-                    text: "2-Tier Hybrid OCR & Page Decomposition",
+                    text: "PDF parsing and hybrid OCR",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Enterprise PDFs often arrive as noisy scans or complex multi-column layouts where simple text extractors fail. The system decomposes incoming documents with PyMuPDF, rasterizes pages at 300 DPI, and routes scanned segments through a 2-tier OCR pipeline combining local Tesseract with Gemini 2.5 Flash vision understanding.",
+                        { text: "OCR pipeline", strong: true },
+                        " — PyMuPDF extracts pages; pytesseract falls back to Gemini Vision for scanned content.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "FAISS Vector Indexing & Real-Time SSE Streaming",
+                    text: "Multimodal retrieval and cited streaming",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Text chunks and visual captions are embedded with models/gemini-embedding-001 and indexed in FAISS with exact page metadata. Queries stream responses token-by-token over Server-Sent Events (SSE) via FastAPI, rendering live markdown alongside clickable (Page X) citation badges and retrieved diagram embeds.",
+                        { text: "Retrieval", strong: true },
+                        " — FAISS indexes text and figure captions with page metadata for cited answers.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "Ephemeral Privacy & Document Intelligence",
+                    text: "Temporary document lifecycle",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Designed for strict data privacy, the architecture enforces ephemeral storage—automatically purging uploaded PDFs, extracted figures, and vector stores on session clear or server startup, while offering one-click executive summaries and automated FAQ generation.",
+                        { text: "Lifecycle", strong: true },
+                        " — Temporary files and indexes are removed on reset or server startup.",
                     ],
                 },
             ],
@@ -281,17 +339,27 @@ export const projects: Project[] = [
         slug: "uwb-elderly-care",
         name: "UWB Elderly Care Monitoring",
         description:
-            "Real-time indoor activity monitoring and fall detection system utilizing UWB transceivers, ESP32 microcontrollers, Python ML, and Telegram emergency notifications.",
+            "Embedded indoor monitoring prototype combining UWB ranging, ESP32 telemetry, Python activity classification, and Telegram alerts.",
         tech: ["Python", "ESP32", "UWB Transceivers", "Machine Learning", "Telegram API"],
         year: "2024",
-        link: "https://github.com/shinas101",
+        github: "https://github.com/shinas101",
         thumb: "/projects/kairos/kairos-preview.webp",
         page: {
-            tagline: "Real-time UWB activity tracking and emergency fall detection for elderly care.",
-            about: [
-                "Developed a real-time indoor monitoring system using Ultra-Wideband (UWB) transceivers, ESP32 microcontrollers, and custom Python ML models for activity classification and fall detection.",
-                "Designed data preprocessing pipelines to filter signal noise and calculate high-accuracy micro-positioning metrics in indoor environments.",
-                "Integrated Telegram APIs for automated immediate emergency alerts to caregivers when abnormal movement patterns or falls are detected.",
+            tagline: "A privacy-preserving embedded sensing pipeline for indoor activity and fall detection.",
+            overview:
+                "ESP32/UWB telemetry feeds Python activity classification; fall events trigger caregiver alerts through Telegram.",
+            highlights: [
+                {
+                    label: "Sensing",
+                    detail: "UWB transceivers capture indoor movement and ranging data without cameras.",
+                },
+                { label: "Embedded telemetry", detail: "ESP32 devices collect and forward UWB sensor data." },
+                { label: "Signal processing", detail: "Python filters noise and derives positioning features." },
+                {
+                    label: "Activity classification",
+                    detail: "Machine-learning models classify movement and detect fall-like patterns.",
+                },
+                { label: "Caregiver alerts", detail: "Telegram API sends notifications for detected events." },
             ],
             poster: "/projects/kairos/kairos-hero.webp",
             cover: "/projects/kairos/kairos-header.webp",
@@ -299,22 +367,24 @@ export const projects: Project[] = [
             story: [
                 {
                     kind: "heading",
-                    text: "Privacy-Preserving Indoor Tracking",
+                    text: "Signal processing for indoor tracking",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Unlike camera-based systems that compromise privacy, UWB RF transceivers track indoor micro-movements accurately without optical surveillance, respecting user privacy in home environments.",
+                        { text: "Signal pipeline", strong: true },
+                        " — UWB + ESP32 telemetry is filtered and classified by Python models.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "Embedded Intelligence & Telegram Alerts",
+                    text: "Embedded inference and event notifications",
                 },
                 {
                     kind: "text",
                     parts: [
-                        "Motion vector streams processed on ESP32 microcontrollers trigger classification models, instantly dispatching actionable alerts and telemetry to caregivers over Telegram.",
+                        { text: "Event response", strong: true },
+                        " — Fall-like activity triggers a Telegram alert to caregivers.",
                     ],
                 },
             ],
@@ -333,10 +403,7 @@ const when = (p: Project) => {
 /** Newest first; projects from the same season keep their order above. */
 export const projectsByDate = [...projects].sort((a, b) => when(b) - when(a));
 
-/** sessionStorage key for the last project page viewed, so the strip can return to it. */
-export const LAST_PROJECT_KEY = "projects-last-viewed";
-
 /** Where a project's tile or button leads: its own page, its outside link, or nowhere. */
-export const projectHref = (p: Project) => (p.page ? `/projects/${p.slug}` : p.link);
+export const projectHref = (p: Project) => (p.page ? `/projects/${p.slug}` : (p.live ?? p.github));
 
 export const isExternal = (href: string) => /^https?:/.test(href);

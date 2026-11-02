@@ -4,7 +4,12 @@ import NextError from "next/error";
 import posthog from "posthog-js";
 import { useEffect } from "react";
 
-export default function GlobalError({ error }) {
+type GlobalErrorProps = {
+    error: unknown;
+    retry: () => void;
+};
+
+export default function GlobalError({ error }: GlobalErrorProps) {
     useEffect(() => {
         posthog.captureException(error);
     }, [error]);

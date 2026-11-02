@@ -14,7 +14,7 @@ export default async function BlogPage() {
                         className="ml-1 inline-block h-[1em] w-[0.55em] translate-y-[0.15em] animate-blink bg-foreground motion-reduce:animate-none"
                     />
                 </p>
-                <h1 className="font-playfairDisplay text-[30px] sm:text-[38px] lg:text-[46px] font-bold tracking-tight text-foreground">
+                <h1 className="font-brodine text-[30px] sm:text-[38px] lg:text-[46px] font-bold tracking-tight text-foreground">
                     Writing
                 </h1>
                 <p className="font-geistSans text-[15px] sm:text-[16px] text-[var(--muted-color)] leading-relaxed max-w-[36rem]">
@@ -48,7 +48,7 @@ export default async function BlogPage() {
                                     <span>•</span>
                                     <span>{post.readTime}</span>
                                 </div>
-                                <h2 className="font-playfairDisplay text-[20px] sm:text-[23px] lg:text-[26px] font-semibold text-foreground underline decoration-[color-mix(in_srgb,var(--foreground-color)_25%,transparent)] decoration-1 underline-offset-[5px] transition-all duration-150 group-hover:decoration-foreground leading-snug">
+                                <h2 className="font-brodine text-[20px] sm:text-[23px] lg:text-[26px] font-semibold text-foreground underline decoration-[color-mix(in_srgb,var(--foreground-color)_25%,transparent)] decoration-1 underline-offset-[5px] transition-all duration-150 group-hover:decoration-foreground leading-snug">
                                     {post.title}
                                 </h2>
                                 {post.description && (
