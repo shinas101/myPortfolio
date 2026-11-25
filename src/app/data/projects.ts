@@ -343,7 +343,6 @@ export const projects: Project[] = [
         tech: ["Next.js 16", "TypeScript", "Redis", "PostgreSQL", "Drizzle ORM", "Better Auth", "Tailwind CSS"],
         year: "2025",
         github: "https://github.com/shinas101/url-shortener",
-        link: "https://github.com/shinas101/url-shortener",
         thumb: "/projects/url-shortener/url-shortener-preview.webp",
         page: {
             tagline:
@@ -375,12 +374,6 @@ export const projects: Project[] = [
                     label: "Instant QR generation",
                     detail: "Generates high-contrast downloadable QR codes alongside REST API endpoints.",
                 },
-            ],
-            about: [
-                "Engineered a high-performance URL management platform supporting anonymous links, authenticated users, passcode-protected redirects, and custom branded aliases.",
-                "Implemented two-tier routing architecture with sub-millisecond in-memory Redis caching and automatic PostgreSQL failover via Drizzle ORM.",
-                "Constructed interactive analytics engine tracking real-time click volume, referrers, device/OS distribution, and edge geolocation via header inspection.",
-                "Integrated Better Auth with Google OAuth for session security, alongside automated QR code generation and REST API developer endpoints.",
             ],
             poster: "/projects/url-shortener/url-shortener-hero.webp",
             cover: "/projects/url-shortener/url-shortener-cover.webp",
