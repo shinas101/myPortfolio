@@ -336,55 +336,87 @@ export const projects: Project[] = [
     },
     {
         index: "04",
-        slug: "uwb-elderly-care",
-        name: "UWB Elderly Care Monitoring",
+        slug: "url-shortener",
+        name: "URL Shortener & Analytics",
         description:
-            "Embedded indoor monitoring prototype combining UWB ranging, ESP32 telemetry, Python activity classification, and Telegram alerts.",
-        tech: ["Python", "ESP32", "UWB Transceivers", "Machine Learning", "Telegram API"],
-        year: "2024",
-        github: "https://github.com/shinas101",
-        thumb: "/projects/kairos/kairos-preview.webp",
+            "Full-stack URL management platform featuring sub-millisecond 302 redirects with in-memory Redis caching, Drizzle ORM PostgreSQL persistence, passcode challenges, and real-time analytics.",
+        tech: ["Next.js 16", "TypeScript", "Redis", "PostgreSQL", "Drizzle ORM", "Better Auth", "Tailwind CSS"],
+        year: "2025",
+        github: "https://github.com/shinas101/url-shortener",
+        link: "https://github.com/shinas101/url-shortener",
+        thumb: "/projects/url-shortener/url-shortener-preview.webp",
         page: {
-            tagline: "A privacy-preserving embedded sensing pipeline for indoor activity and fall detection.",
+            tagline:
+                "Ultra-fast, privacy-first short links with passcode protection, instant QR codes, and real-time analytics.",
             overview:
-                "ESP32/UWB telemetry feeds Python activity classification; fall events trigger caregiver alerts through Telegram.",
+                "Next.js 16 App Router platform pairing in-memory Redis caching with PostgreSQL and Drizzle ORM for sub-millisecond 302 redirection, passcode challenges, and edge analytics.",
             highlights: [
                 {
-                    label: "Sensing",
-                    detail: "UWB transceivers capture indoor movement and ranging data without cameras.",
+                    label: "Sub-ms redirection",
+                    detail: "In-memory Redis cache resolves short codes to 302 redirects in under 1 millisecond.",
                 },
-                { label: "Embedded telemetry", detail: "ESP32 devices collect and forward UWB sensor data." },
-                { label: "Signal processing", detail: "Python filters noise and derives positioning features." },
                 {
-                    label: "Activity classification",
-                    detail: "Machine-learning models classify movement and detect fall-like patterns.",
+                    label: "Drizzle ORM persistence",
+                    detail: "PostgreSQL 16 relational store handles link state, ownership, and cold-start fallback.",
                 },
-                { label: "Caregiver alerts", detail: "Telegram API sends notifications for detected events." },
+                {
+                    label: "Passcode protection",
+                    detail: "Sensitive destinations require client authentication via /unlock/[code] challenge.",
+                },
+                {
+                    label: "Real-time analytics",
+                    detail: "Tracks 7-day click volume, referrer domains, device categories, and edge geolocation.",
+                },
+                {
+                    label: "Session security",
+                    detail: "Better Auth manages user authentication, Google OAuth, and personal link inventories.",
+                },
+                {
+                    label: "Instant QR generation",
+                    detail: "Generates high-contrast downloadable QR codes alongside REST API endpoints.",
+                },
             ],
-            poster: "/projects/kairos/kairos-hero.webp",
-            cover: "/projects/kairos/kairos-header.webp",
-            share: "/projects/kairos/kairos-og.jpg",
+            about: [
+                "Engineered a high-performance URL management platform supporting anonymous links, authenticated users, passcode-protected redirects, and custom branded aliases.",
+                "Implemented two-tier routing architecture with sub-millisecond in-memory Redis caching and automatic PostgreSQL failover via Drizzle ORM.",
+                "Constructed interactive analytics engine tracking real-time click volume, referrers, device/OS distribution, and edge geolocation via header inspection.",
+                "Integrated Better Auth with Google OAuth for session security, alongside automated QR code generation and REST API developer endpoints.",
+            ],
+            poster: "/projects/url-shortener/url-shortener-hero.webp",
+            cover: "/projects/url-shortener/url-shortener-cover.webp",
+            share: "/projects/url-shortener/url-shortener-og.jpg",
             story: [
                 {
                     kind: "heading",
-                    text: "Signal processing for indoor tracking",
+                    text: "Sub-Millisecond 302 Redirection Pipeline",
                 },
                 {
                     kind: "text",
                     parts: [
-                        { text: "Signal pipeline", strong: true },
-                        " — UWB + ESP32 telemetry is filtered and classified by Python models.",
+                        { text: "Redis routing", strong: true },
+                        " — Incoming short URL requests resolve against an in-memory Redis key store, completing HTTP 302 redirects in sub-millisecond times before falling back to PostgreSQL.",
                     ],
                 },
                 {
                     kind: "heading",
-                    text: "Embedded inference and event notifications",
+                    text: "Passcode Challenges and Route Protection",
                 },
                 {
                     kind: "text",
                     parts: [
-                        { text: "Event response", strong: true },
-                        " — Fall-like activity triggers a Telegram alert to caregivers.",
+                        { text: "Access control", strong: true },
+                        " — Protected short links redirect visitors to an encrypted /unlock challenge screen that validates the secret before dispatching the target URL.",
+                    ],
+                },
+                {
+                    kind: "heading",
+                    text: "Real-Time Edge Analytics & Geolocation",
+                },
+                {
+                    kind: "text",
+                    parts: [
+                        { text: "Telemetry logging", strong: true },
+                        " — Asynchronous events capture referrer domains, operating systems, and edge IP geolocation without delaying redirection response times.",
                     ],
                 },
             ],

@@ -67,13 +67,13 @@ export const SOURCES: Record<string, Source> = {
             "Multimodal RAG with 2-tier OCR (Tesseract + Gemini 2.5 Vision), PyMuPDF figure extraction, and FAISS vector search.",
         href: "/projects/pdf-chatbot",
     },
-    uwb: {
-        key: "uwb",
-        name: "Elderly Care Activity Monitoring",
-        role: "Indoor UWB Activity & Fall Detection",
-        dates: "2024",
+    urlshortener: {
+        key: "urlshortener",
+        name: "URL Shortener & Analytics",
+        role: "Full-Stack URL Management & Caching Platform",
+        dates: "2025",
         summary:
-            "Real-time tracking system using UWB transceivers, ESP32, Python ML models, and Telegram emergency alerts.",
-        href: "/projects/uwb-elderly-care",
+            "Next.js 16, Redis sub-millisecond caching, PostgreSQL with Drizzle ORM, passcode protection, and real-time analytics.",
+        href: "/projects/url-shortener",
     },
 };

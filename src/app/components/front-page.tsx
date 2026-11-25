@@ -177,15 +177,15 @@ const FEATURED_PROJECTS: FrontProject[] = [
         tools: ["FastAPI", "Gemini 2.5", "LangChain", "FAISS", "PyMuPDF", "pytesseract", "SSE", "Python"],
     },
     {
-        id: "uwb-elderly-care",
-        name: "UWB Elderly Care Monitoring",
-        slug: "uwb-elderly-care",
+        id: "url-shortener",
+        name: "URL Shortener & Analytics",
+        slug: "url-shortener",
         description:
-            "Real-time indoor activity monitoring and fall detection system utilizing UWB transceivers, ESP32 microcontrollers, Python ML, and Telegram emergency alerts.",
-        image: "/projects/kairos/kairos-hero.webp",
-        year: "2024",
-        github: "https://github.com/shinas101",
-        tools: ["Python", "ESP32", "UWB Radar", "Machine Learning", "Telegram API", "IoT"],
+            "Full-stack URL management platform featuring sub-millisecond 302 redirects with in-memory Redis caching, Drizzle ORM PostgreSQL persistence, passcode challenges, and real-time analytics.",
+        image: "/projects/url-shortener/url-shortener-hero.webp",
+        year: "2025",
+        github: "https://github.com/shinas101/url-shortener",
+        tools: ["Next.js 16", "TypeScript", "Redis", "PostgreSQL", "Drizzle ORM", "Better Auth", "Tailwind CSS"],
     },
 ];
 
@@ -265,7 +265,8 @@ const FrontPage = () => {
                             <p>
                                 B.Tech in ECE graduate from <Cited source="lbs">L.B.S College of Engineering</Cited>.
                                 Building <Cited source="clinical">Clinical Voice AI</Cited>,{" "}
-                                <Cited source="flashnews">News FlipCard</Cited>, and{" "}
+                                <Cited source="flashnews">News FlipCard</Cited>,{" "}
+                                <Cited source="urlshortener">URL Shortener</Cited>, and{" "}
                                 <Cited source="pdfchatbot">PDFChatbot</Cited>.
                             </p>
                         </div>
@@ -535,7 +536,7 @@ const FrontPage = () => {
                                     className={`${UNDERLINE} inline-flex items-center gap-1.5 opacity-80 hover:opacity-100`}
                                 >
                                     <PixelIcon name="keyboard" size={13} />
-                                    <span>blog writing</span>
+                                    <span>blog writing (coming soon)</span>
                                 </Link>
                             </div>
                         </div>
